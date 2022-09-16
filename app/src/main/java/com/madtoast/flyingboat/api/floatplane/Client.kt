@@ -2,6 +2,7 @@ package com.madtoast.flyingboat.api.floatplane
 
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthTwoFactorRequest
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthenticationRequest
+import com.madtoast.flyingboat.api.floatplane.model.creator.CreatorPlans
 import com.madtoast.flyingboat.api.floatplane.model.user.User
 import com.madtoast.flyingboat.api.floatplane.model.user.UserContainer
 import com.squareup.moshi.JsonAdapter
@@ -78,7 +79,7 @@ class Client {
         fun execute2FA(token: AuthTwoFactorRequest): UserContainer {
             val userContainerAdapter = moshi.adapter(UserContainer::class.java);
             val tokenRequestAdapter = moshi.adapter(AuthTwoFactorRequest::class.java);
-            val request = prepareRequest(url.plus(URI_LOGIN), "POST", tokenRequestAdapter.toJson(token).toRequestBody(
+            val request = prepareRequest(url.plus(URI_2FALOGIN), "POST", tokenRequestAdapter.toJson(token).toRequestBody(
                 "application/json".toMediaType()))
                 .build();
             var authResponse: UserContainer? = null;
@@ -99,7 +100,7 @@ class Client {
     inner class Creator {
         fun info(id: String) : Creator{
             val creatorAdapter = moshi.adapter(Creator::class.java);
-            val request = prepareRequest(addToQueryParam(url.plus(URI_LOGIN), "id", id), "GET", null)
+            val request = prepareRequest(addToQueryParam(url.plus(URI_CREATOR_INFO), "id", id), "GET", null)
                 .build();
             var creatorInfo: Creator? = null;
 
@@ -117,7 +118,7 @@ class Client {
 
         fun list(search: String) : Array<Creator>{
             val creatorAdapter = moshi.adapter(Array<Creator>::class.java);
-            val request = prepareRequest(addToQueryParam(url.plus(URI_LOGIN), "search", search), "GET", null)
+            val request = prepareRequest(addToQueryParam(url.plus(URI_CREATOR_LIST), "search", search), "GET", null)
                 .build();
             var creatorInfo: Array<Creator>? = null;
 
@@ -131,6 +132,24 @@ class Client {
             }
 
             return creatorInfo!!;
+        }
+
+        fun plans(creatorId: String) : CreatorPlans {
+            val creatorAdapter = moshi.adapter(CreatorPlans::class.java);
+            val request = prepareRequest(addToQueryParam(url.plus(URI_CREATOR_PLANS), "creatorId", creatorId), "GET", null)
+                .build();
+            var creatorPlans: CreatorPlans? = null;
+
+            httpClient.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    ErrorHandler().handleResponseError(response)
+                    return@use
+                };
+
+                creatorPlans = creatorAdapter.fromJson(response.body!!.source());
+            }
+
+            return creatorPlans!!;
         }
     }
     inner class Content {
@@ -147,7 +166,7 @@ class Client {
         private const val URI_DELIVERY = "v2/cdn/delivery"
         private const val URI_CREATOR = "v3/creator"
         private const val URI_CREATOR_INFO = "$URI_CREATOR/info"
-        private const val URI_CREATOR_NAMED = "$URI_CREATOR/list"
+        private const val URI_CREATOR_LIST = "$URI_CREATOR/list"
         private const val URI_CREATOR_PLANS = "v2/plan/info"
         private const val URI_SOCKET = "v3/socket"
         private const val URI_SOCKET_CONNECT = "$URI_SOCKET/connect"
