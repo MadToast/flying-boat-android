@@ -1,0 +1,93 @@
+package com.madtoast.flyingboat.api.floatplane
+
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import okhttp3.Headers
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+
+
+class FloatplaneClient private constructor(private val appPrefs: SharedPreferences) {
+    private lateinit var retrofit: Retrofit
+    private lateinit var authenticationToken: String
+
+    private fun getAuthenticationHeader(): String? {
+        if (!this::authenticationToken.isInitialized)
+            authenticationToken = appPrefs.getString(AUTH_HEADER, "").toString()
+
+        return authenticationToken
+    }
+
+    private fun setAuthenticationHeader(authToken: String) {
+        appPrefs.edit(commit = true) {
+            putString(AUTH_HEADER, authToken)
+        }
+        authenticationToken = authToken
+    }
+
+    fun eraseAuthenticationHeader() {
+        setAuthenticationHeader("")
+    }
+
+    fun findAndSetAuthenticationHeader(headers: Headers) {
+        for (header in headers.names()) {
+            if (header.equals("set-cookie", true)) {
+                val cookieHeader = headers[header]?.split(";")?.get(0);
+                cookieHeader?.startsWith(AUTH_HEADER, true)
+                if (cookieHeader != null) {
+                    setAuthenticationHeader(cookieHeader.split("=")[1])
+                }
+                break
+            }
+        }
+    }
+
+    private fun init() {
+        val defaultHttpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val authHeader = getAuthenticationHeader()
+
+                if (!authHeader.isNullOrEmpty()) {
+                    val request: Request = chain.request().newBuilder()
+                        .addHeader("Cookie", authHeader)
+                        .addHeader("User-Agent", "Flyingboat (Android), CFNetwork").build()
+                    chain.proceed(request)
+                } else {
+                    chain.proceed(chain.request())
+                }
+            }.build()
+
+        retrofit = Retrofit.Builder()
+            .client(defaultHttpClient)
+            .baseUrl(URI_API)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
+
+    fun <T> getService(service: Class<T>): T {
+        if (this::retrofit.isInitialized) {
+            init()
+        }
+
+        return retrofit.create(service)
+    }
+
+    companion object {
+        const val URI_API = "https://www.floatplane.com"
+        const val AUTH_HEADER = "sails.sid"
+        private var INSTANCE: FloatplaneClient? = null
+
+        @Synchronized
+        fun getInstance(appPrefs: SharedPreferences): FloatplaneClient {
+            if (INSTANCE == null) {
+                synchronized(this) {
+                    INSTANCE = FloatplaneClient(appPrefs)
+                }
+            }
+
+            return INSTANCE!!
+        }
+    }
+}

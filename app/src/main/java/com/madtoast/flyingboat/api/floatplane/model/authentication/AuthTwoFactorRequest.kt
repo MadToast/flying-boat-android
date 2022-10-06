@@ -1,5 +1,5 @@
 package com.madtoast.flyingboat.api.floatplane.model.authentication
 
-class AuthTwoFactorRequest {
-    val token: String = "";
-}
+data class AuthTwoFactorRequest(
+    val token: String
+)

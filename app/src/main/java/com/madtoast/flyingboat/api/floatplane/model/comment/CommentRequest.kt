@@ -1,6 +1,6 @@
 package com.madtoast.flyingboat.api.floatplane.model.comment
 
-class CommentRequest {
-    val blogPost: String? = null;
-    val text: String? = null;
-}
+data class CommentRequest(
+    val blogPost: String?,
+    val text: String?
+)

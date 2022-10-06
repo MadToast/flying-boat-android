@@ -1,15 +1,15 @@
 package com.madtoast.flyingboat.api.floatplane.model.content
 
-class Metadata {
-    val hasVideo: Boolean = false;
-    val videoCount: Int = -1;
-    val videoDuration: Int = -1;
-    val hasAudio: Boolean = false;
-    val audioCount: Int = -1;
-    val audioDuration: Int = -1;
-    val hasPicture: Boolean = false;
-    val pictureCount: Int = -1;
-    val hasGallery: Boolean = false;
-    val galleryCount: Int = -1;
-    val isFeature: Boolean = false;
-}
+data class Metadata(
+    val hasVideo: Boolean,
+    val videoCount: Int,
+    val videoDuration: Int,
+    val hasAudio: Boolean,
+    val audioCount: Int,
+    val audioDuration: Int,
+    val hasPicture: Boolean,
+    val pictureCount: Int,
+    val hasGallery: Boolean,
+    val galleryCount: Int,
+    val isFeature: Boolean,
+)

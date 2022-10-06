@@ -1,6 +1,6 @@
 package com.madtoast.flyingboat.api.floatplane.model.creator
 
-class DiscordRole {
-    val roleName: String? = null;
-    val server: String? = null;
-}
+data class DiscordRole(
+    val roleName: String?,
+    val server: String?
+)

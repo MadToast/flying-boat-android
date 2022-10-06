@@ -1,11 +1,11 @@
 package com.madtoast.flyingboat.api.floatplane.model.creator
 
-class Subscription {
-    val startDate: String? = null;
-    val endDate: String? = null;
-    val paymentID: Int = -1;
-    val interval: String? = null;
-    val paymentCancelled: Boolean = false;
-    val plan: Plan? = null;
-    val creator: String? = null;
-}
+data class Subscription(
+    val startDate: String?,
+    val endDate: String?,
+    val paymentID: Int,
+    val interval: String?,
+    val paymentCancelled: Boolean,
+    val plan: Plan?,
+    val creator: String?
+)

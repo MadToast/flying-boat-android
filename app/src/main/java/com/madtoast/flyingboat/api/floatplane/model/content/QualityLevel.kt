@@ -1,9 +1,9 @@
 package com.madtoast.flyingboat.api.floatplane.model.content
 
-class QualityLevel {
-    val name: String? = null;
-    val width: Int = 0;
-    val height: Int = 0;
-    val label: String? = null;
-    val order: Int = 0;
-}
+data class QualityLevel(
+    val name: String?,
+    val width: Int,
+    val height: Int,
+    val label: String?,
+    val order: Int
+)
