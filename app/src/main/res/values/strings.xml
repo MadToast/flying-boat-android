@@ -1,12 +1,42 @@
 <resources>
     <string name="app_name">Flyingboat</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="IntroText">Welcome to Flyingboat. An alternative client to Floatplane\'s official client. Open-source and hopefully can help the team improve the official experience!</string>
+    <string name="GoBackToHome">Go back home!</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be more than 5 characters</string>
+    <string name="invalid_token">Token must be more than 5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="username_label">Username or Email</string>
+    <string name="password_label">Password</string>
+    <string name="login_label">Login</string>
+    <string name="send_auth_token">Send Code</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="loading_string">Loading</string>
+    <string name="logging_in_string">Checking Pilot Credentials…</string>
+    <string name="two_factor_logging_in_string">Polishing Credentials and taking a closer look…</string>
 
+    <!-- Error Messages -->
+    <string name="network_error">Could not reach Floatplane servers! Check your connection!</string>
+    <string name="bad_request">Bad Request. Check if there\'s a newer app version!</string>
+    <string name="needs_captcha">API requires Captcha. Please report this issue on Github!</string>
+    <string name="user_pass_incorrect">The username or password is incorrect!</string>
+    <string name="bad_token">Authentication Code Invalid, try again or check if the time is correct on your device!</string>
+    <string name="login_first">Please login to first before attempting to access resources!</string>
+    <string name="forbidden">Request forbidden! Please sign in again!</string>
+    <string name="not_found">Not Found! The resource may have been delisted or deleted.</string>
+
+    <!-- Placeholder strings -->
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -43,16 +73,5 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="APITest">API Test</string>
-    <string name="IntroText">Welcome to Flyingboat. An alternative client to Floatplane\'s official client. Open-source and hopefully can help the team improve the official experience!</string>
-    <string name="GoBackToHome">Go back home!</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="two_factor_hint">Authentication Code (ex: 123456)</string>
 </resources>

@@ -2,9 +2,10 @@ package com.madtoast.flyingboat.api.floatplane
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Headers
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -13,7 +14,7 @@ class FloatplaneClient private constructor(private val appPrefs: SharedPreferenc
     private lateinit var retrofit: Retrofit
     private lateinit var authenticationToken: String
 
-    private fun getAuthenticationHeader(): String? {
+    private fun getAuthenticationHeader(): String {
         if (!this::authenticationToken.isInitialized)
             authenticationToken = appPrefs.getString(AUTH_HEADER, "").toString()
 
@@ -34,10 +35,9 @@ class FloatplaneClient private constructor(private val appPrefs: SharedPreferenc
     fun findAndSetAuthenticationHeader(headers: Headers) {
         for (header in headers.names()) {
             if (header.equals("set-cookie", true)) {
-                val cookieHeader = headers[header]?.split(";")?.get(0);
-                cookieHeader?.startsWith(AUTH_HEADER, true)
-                if (cookieHeader != null) {
-                    setAuthenticationHeader(cookieHeader.split("=")[1])
+                val cookieHeader = headers[header]?.split(";")?.get(0)
+                if (cookieHeader != null && cookieHeader.startsWith(AUTH_HEADER, true)) {
+                    setAuthenticationHeader(cookieHeader)
                 }
                 break
             }
@@ -48,26 +48,31 @@ class FloatplaneClient private constructor(private val appPrefs: SharedPreferenc
         val defaultHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val authHeader = getAuthenticationHeader()
+                val request = chain.request().newBuilder()
+                    .addHeader("User-Agent", "Flyingboat(Android), CFNetwork")
+                    .addHeader("Content-Type", "application/json")
 
-                if (!authHeader.isNullOrEmpty()) {
-                    val request: Request = chain.request().newBuilder()
-                        .addHeader("Cookie", authHeader)
-                        .addHeader("User-Agent", "Flyingboat (Android), CFNetwork").build()
-                    chain.proceed(request)
-                } else {
-                    chain.proceed(chain.request())
+                if (authHeader.isNotEmpty()) {
+                    request.addHeader("Cookie", authHeader)
                 }
+                chain.proceed(request.build())
             }.build()
 
         retrofit = Retrofit.Builder()
             .client(defaultHttpClient)
             .baseUrl(URI_API)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder().add(
+                        KotlinJsonAdapterFactory()
+                    ).build()
+                )
+            )
             .build()
     }
 
     fun <T> getService(service: Class<T>): T {
-        if (this::retrofit.isInitialized) {
+        if (!this::retrofit.isInitialized) {
             init()
         }
 

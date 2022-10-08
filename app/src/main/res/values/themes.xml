@@ -1,9 +1,24 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Flyingboat" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:colorPrimary">@color/dark_blue</item>
+        <item name="colorSecondary">@color/darkish_blue</item>
+        <item name="android:colorAccent">@color/blue</item>
     </style>
 
     <style name="Theme.Flyingboat" parent="Base.Theme.Flyingboat" />
+
+    <style name="Theme.Flyingboat.Login" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/dark_blue</item>
+        <item name="android:colorPrimary">@color/dark_blue</item>
+        <item name="colorSecondary">@color/darkish_blue</item>
+        <item name="android:colorAccent">@color/blue</item>
+    </style>
+
+    <style name="TextInputLayout.Login" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="boxStrokeErrorColor">@color/orange</item>
+        <item name="boxStrokeColor">@color/blue</item>
+        <item name="hintTextColor">@color/blue</item>
+        <item name="colorPrimary">@color/blue</item>
+    </style>
 </resources>

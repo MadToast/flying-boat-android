@@ -1,4 +1,4 @@
-package com.madtoast.flyingboat.ui.login
+package com.madtoast.flyingboat.ui.activities.ui.login
 
 /**
  * Data validation state of the login form.
@@ -6,5 +6,7 @@ package com.madtoast.flyingboat.ui.login
 data class LoginFormState(
     val usernameError: Int? = null,
     val passwordError: Int? = null,
+    val twoFactorError: Int? = null,
     val isDataValid: Boolean = false
-)
+) {
+}

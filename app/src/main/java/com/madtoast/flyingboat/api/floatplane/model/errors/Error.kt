@@ -8,6 +8,10 @@ data class Error(
     val message: String,
     val data: Dictionary<String, Any>
 ) {
+    override fun toString(): String {
+        return "[$id] - $message"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

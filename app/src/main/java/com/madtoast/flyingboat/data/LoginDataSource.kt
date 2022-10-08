@@ -9,7 +9,7 @@ import com.madtoast.flyingboat.api.floatplane.interfaces.UserV3
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthTwoFactorRequest
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthenticationRequest
-import retrofit2.HttpException
+import com.madtoast.flyingboat.api.floatplane.model.user.User
 import java.io.IOException
 
 
@@ -34,19 +34,19 @@ class LoginDataSource constructor(private val context: Context) {
         userV3 = apiClient.getService(UserV3::class.java)
     }
 
-    suspend fun checkAuthStillValid(): Boolean {
+    suspend fun getUserData(): User? {
         return try {
-            val userInfo = userV3.self();
-            userInfo != null && !userInfo.id.isNullOrEmpty()
+            val userInfo = userV3.self()
+            userInfo
         } catch (e: Throwable) {
-            false;
+            null
         }
     }
 
     suspend fun login(username: String, password: String): Result<AuthResponse> {
         try {
             //Call the API to get authentication
-            var authResponse = authV2.login(AuthenticationRequest(username, password))
+            val authResponse = authV2.login(AuthenticationRequest(username, password))
 
             //If successful, check if we have a cookie for authentication
             if (authResponse.isSuccessful) {
@@ -54,7 +54,7 @@ class LoginDataSource constructor(private val context: Context) {
                 return Result.Success(authResponse.body()!!)
             }
 
-            return Result.Error(HttpException(authResponse));
+            return Result.APIError(authResponse.raw())
         } catch (e: Throwable) {
             return Result.Error(IOException("Error connecting to Floatplane", e))
         }
@@ -62,7 +62,7 @@ class LoginDataSource constructor(private val context: Context) {
 
     suspend fun check2FA(token: String): Result<AuthResponse> {
         try {
-            var authResponse = authV2.confirm2fa(AuthTwoFactorRequest(token))
+            val authResponse = authV2.confirm2fa(AuthTwoFactorRequest(token))
 
             //If successful, check if we have a cookie for authentication
             if (authResponse.isSuccessful) {
@@ -70,7 +70,7 @@ class LoginDataSource constructor(private val context: Context) {
                 return Result.Success(authResponse.body()!!)
             }
 
-            return Result.Error(HttpException(authResponse));
+            return Result.APIError(authResponse.raw())
         } catch (e: Throwable) {
             return Result.Error(IOException("Error connecting to Floatplane", e))
         }
@@ -81,11 +81,11 @@ class LoginDataSource constructor(private val context: Context) {
             //Call the API to get authentication
             authV2.logout()
 
-            return Result.Success(true);
+            return Result.Success(true)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error connecting to Floatplane", e))
         } finally {
-            apiClient.eraseAuthenticationHeader();
+            apiClient.eraseAuthenticationHeader()
         }
     }
 
