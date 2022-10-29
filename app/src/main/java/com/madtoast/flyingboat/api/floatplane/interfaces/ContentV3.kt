@@ -5,6 +5,7 @@ import com.madtoast.flyingboat.api.floatplane.model.content.LastElement
 import com.madtoast.flyingboat.api.floatplane.model.content.Post
 import com.madtoast.flyingboat.api.floatplane.model.content.ReactionRequest
 import com.madtoast.flyingboat.api.floatplane.model.enums.SortType
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -36,7 +37,7 @@ interface ContentV3 {
         @Query("ids") ids: Array<String>,
         @Query("limit") limit: Int,
         @Query("fetchAfter") fetchAfter: Array<LastElement>
-    ): ContentListResponse?
+    ): Response<ContentListResponse?>
 
     @GET(URI_BASE + URI_TAGS)
     suspend fun tags(@Query("creatorIds") ids: Array<String>): Dictionary<String, Int>?

@@ -6,40 +6,61 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.ErrorHandler
-import com.madtoast.flyingboat.data.LoginRepository
+import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
+import com.madtoast.flyingboat.api.floatplane.model.creator.Creator
+import com.madtoast.flyingboat.data.FloatplaneRepository
 import com.madtoast.flyingboat.data.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+    private val _loginResult = MutableLiveData<UiResult<AuthResponse>>()
+    val loginResult: LiveData<UiResult<AuthResponse>> = _loginResult
+
+    private val _creatorsResult = MutableLiveData<UiResult<Array<Creator>>>()
+    val creatorsResult: LiveData<UiResult<Array<Creator>>> = _creatorsResult
+
+    private var creatorsLoaded = false
 
     private val _errorHandler = ErrorHandler()
     private var hasInitialized = false
 
     fun init() {
         if (!hasInitialized) {
-            loginRepository.init()
+            floatplaneRepository.init()
             hasInitialized = true
+        }
+    }
+
+    suspend fun checkUserLoggedIn() {
+        // can be launched in a separate asynchronous job
+        val result = floatplaneRepository.getLoggedInUser(true)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            if (result != null) {
+                _loginResult.value =
+                    UiResult(success = AuthResponse(result, false))
+            } else {
+                _loginResult.value = UiResult(error = R.string.enter_credentials)
+            }
         }
     }
 
     suspend fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = floatplaneRepository.login(username, password)
 
         CoroutineScope(Dispatchers.Main).launch {
             if (result is Result.Success) {
                 _loginResult.value =
-                    LoginResult(success = result.data)
+                    UiResult(success = result.data)
             } else {
-                _loginResult.value = LoginResult(
+                _loginResult.value = UiResult(
                     error = _errorHandler.handleResponseError(
                         result,
                         R.string.needs_captcha,
@@ -52,20 +73,43 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     suspend fun check2Fa(token: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.check2Fa(token)
+        val result = floatplaneRepository.check2Fa(token)
 
         CoroutineScope(Dispatchers.Main).launch {
             if (result is Result.Success) {
                 _loginResult.value =
-                    LoginResult(success = result.data)
+                    UiResult(success = result.data)
             } else {
-                _loginResult.value = LoginResult(
+                _loginResult.value = UiResult(
                     error = _errorHandler.handleResponseError(
                         result,
                         R.string.bad_request,
                         R.string.bad_token
                     )
                 )
+            }
+        }
+    }
+
+    suspend fun getAllPlatformCreators() {
+        if (!creatorsLoaded) {
+            val result =
+                floatplaneRepository.handleResponse(floatplaneRepository.creatorV3().discover())
+
+            CoroutineScope(Dispatchers.Main).launch {
+                if (result is Result.Success) {
+                    _creatorsResult.value =
+                        UiResult(success = result.data)
+                    creatorsLoaded = true
+                } else {
+                    _creatorsResult.value = UiResult(
+                        error = _errorHandler.handleResponseError(
+                            result,
+                            R.string.bad_request,
+                            R.string.bad_token
+                        )
+                    )
+                }
             }
         }
     }

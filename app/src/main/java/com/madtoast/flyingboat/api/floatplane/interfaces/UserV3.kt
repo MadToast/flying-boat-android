@@ -2,12 +2,13 @@ package com.madtoast.flyingboat.api.floatplane.interfaces
 
 import com.madtoast.flyingboat.api.floatplane.model.creator.Subscription
 import com.madtoast.flyingboat.api.floatplane.model.user.User
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface UserV3 {
 
     @GET(URI_BASE + URI_SUBSCRIPTIONS)
-    suspend fun subscriptions(): Array<Subscription>?
+    suspend fun subscriptions(): Response<Array<Subscription>?>
 
     @GET(URI_BASE + URI_SELF)
     suspend fun self(): User?

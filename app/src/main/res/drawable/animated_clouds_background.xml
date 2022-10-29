@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/clouds_no_shadows_export">
+    <target android:name="top-clouds">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="3000"
+                    android:delay="300"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-10"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="60000"
+                    android:propertyName="translateX"
+                    android:valueFrom="-200"
+                    android:valueTo="-1400"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="top-clouds-two">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="5000"
+                    android:delay="1000"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-10"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="60000"
+                    android:propertyName="translateX"
+                    android:valueFrom="1200"
+                    android:valueTo="-200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="upper-clouds">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="4000"
+                    android:delay="1400"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-20"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="40000"
+                    android:propertyName="translateX"
+                    android:valueFrom="-200"
+                    android:valueTo="-1400"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="upper-clouds-two">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:delay="300"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-20"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="40000"
+                    android:propertyName="translateX"
+                    android:valueFrom="1200"
+                    android:valueTo="-200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="lower-clouds">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="4000"
+                    android:delay="700"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-30"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="30000"
+                    android:propertyName="translateX"
+                    android:valueFrom="-200"
+                    android:valueTo="-1400"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="lower-clouds-two">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="5000"
+                    android:delay="1800"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-30"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="30000"
+                    android:propertyName="translateX"
+                    android:valueFrom="1200"
+                    android:valueTo="-200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="bottom-clouds">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="7000"
+                    android:delay="300"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-10"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="20000"
+                    android:propertyName="translateX"
+                    android:valueFrom="-200"
+                    android:valueTo="-1400"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="bottom-clouds-two">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="4000"
+                    android:delay="1500"
+                    android:propertyName="translateY"
+                    android:valueFrom="0"
+                    android:valueTo="-10"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="20000"
+                    android:propertyName="translateX"
+                    android:valueFrom="1200"
+                    android:valueTo="-200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

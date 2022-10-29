@@ -4,7 +4,7 @@ import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.data.Result
 
 class ErrorHandler {
-    fun <T : Any> handleResponseError(
+    fun <T : Any?> handleResponseError(
         result: Result<T>,
         badRequestString: Int = R.string.bad_request,
         unauthorizedString: Int = R.string.login_first

@@ -1,12 +1,19 @@
 package com.madtoast.flyingboat.data
 
+import com.madtoast.flyingboat.api.floatplane.interfaces.ContentV3
+import com.madtoast.flyingboat.api.floatplane.interfaces.CreatorV3
+import com.madtoast.flyingboat.api.floatplane.interfaces.UserV3
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
 import com.madtoast.flyingboat.api.floatplane.model.user.User
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import retrofit2.Response
 import java.io.*
 
-class LoginRepository(private val dataSource: LoginDataSource, private val cacheDir: File) {
+class FloatplaneRepository(
+    private val dataSource: FloatplaneDataSource,
+    private val cacheDir: File
+) {
 
     // in-memory cache of the loggedInUser object
     private var user: User? = null
@@ -19,6 +26,22 @@ class LoginRepository(private val dataSource: LoginDataSource, private val cache
 
     fun init() {
         dataSource.init()
+    }
+
+    fun creatorV3(): CreatorV3 {
+        return dataSource.creatorV3()
+    }
+
+    fun contentV3(): ContentV3 {
+        return dataSource.contentV3()
+    }
+
+    fun userV3(): UserV3 {
+        return dataSource.userV3()
+    }
+
+    fun <T : Any?> handleResponse(response: Response<T>): Result<T> {
+        return dataSource.handleResponse(response)
     }
 
     suspend fun logout() {
@@ -51,9 +74,10 @@ class LoginRepository(private val dataSource: LoginDataSource, private val cache
         return result
     }
 
-    suspend fun getLoggedInUser(): User? {
+    suspend fun getLoggedInUser(firstStart: Boolean = false): User? {
         if (user == null) {
-            user = getUserFromDiskCache()
+            if (!firstStart)
+                user = getUserFromDiskCache()
 
             if (user == null) {
                 user = dataSource.getUserData()
@@ -80,7 +104,11 @@ class LoginRepository(private val dataSource: LoginDataSource, private val cache
             bw.close()
         }
 
-        return userAdapter.fromJson(userJson)
+        if (userJson.isNotBlank()) {
+            return userAdapter.fromJson(userJson)
+        }
+
+        return null
     }
 
     private fun saveUserToCache(loggedInUser: User?) {

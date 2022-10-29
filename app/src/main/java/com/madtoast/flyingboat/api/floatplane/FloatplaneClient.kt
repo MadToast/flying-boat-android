@@ -1,6 +1,7 @@
 package com.madtoast.flyingboat.api.floatplane
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -82,13 +83,19 @@ class FloatplaneClient private constructor(private val appPrefs: SharedPreferenc
     companion object {
         const val URI_API = "https://www.floatplane.com"
         const val AUTH_HEADER = "sails.sid"
+        const val TAG = "FLOATPLANE_API"
         private var INSTANCE: FloatplaneClient? = null
 
         @Synchronized
-        fun getInstance(appPrefs: SharedPreferences): FloatplaneClient {
+        fun getInstance(appPrefs: SharedPreferences?): FloatplaneClient {
             if (INSTANCE == null) {
-                synchronized(this) {
-                    INSTANCE = FloatplaneClient(appPrefs)
+                if (appPrefs != null) {
+                    synchronized(this) {
+                        INSTANCE = FloatplaneClient(appPrefs)
+                    }
+                } else {
+                    Log.e(TAG, "App Preferences was not provided!")
+                    throw NullPointerException("App Preferences was not provided!")
                 }
             }
 

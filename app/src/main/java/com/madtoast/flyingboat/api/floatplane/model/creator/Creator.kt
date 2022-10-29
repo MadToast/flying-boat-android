@@ -6,7 +6,7 @@ import com.madtoast.flyingboat.api.floatplane.model.content.LiveStream
 
 data class Creator(
     val id: String?,
-    val owner: String?,
+    val owner: Any?,
     val title: String?,
     val urlname: String?,
     val description: String?,

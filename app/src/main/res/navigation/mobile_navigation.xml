@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.madtoast.flyingboat.ui.fragments.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_creators"
+        android:name="com.madtoast.flyingboat.ui.fragments.creators.CreatorsFragment"
+        android:label="@string/title_creators"
+        tools:layout="@layout/fragment_creators">
+        <action
+            android:id="@+id/action_navigation_creators_to_creatorListFragment"
+            app:destination="@id/creatorListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_playlists"
+        android:name="com.madtoast.flyingboat.ui.fragments.notifications.LibraryFragment"
+        android:label="@string/title_library"
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_navigation_playlists_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatorListFragment"
+        android:name="com.madtoast.flyingboat.CreatorListFragment"
+        android:label="fragment_creator_list"
+        tools:layout="@layout/fragment_creator_list" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.madtoast.flyingboat.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.madtoast.flyingboat.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+</navigation>

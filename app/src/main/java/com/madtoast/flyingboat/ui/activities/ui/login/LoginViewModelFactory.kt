@@ -3,8 +3,8 @@ package com.madtoast.flyingboat.ui.activities.ui.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.madtoast.flyingboat.data.LoginDataSource
-import com.madtoast.flyingboat.data.LoginRepository
+import com.madtoast.flyingboat.data.FloatplaneDataSource
+import com.madtoast.flyingboat.data.FloatplaneRepository
 import java.io.File
 
 /**
@@ -18,8 +18,8 @@ class LoginViewModelFactory(private val cacheFile: File, private val context: Co
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
-                loginRepository = LoginRepository(
-                    dataSource = LoginDataSource(context),
+                floatplaneRepository = FloatplaneRepository(
+                    dataSource = FloatplaneDataSource(context),
                     cacheFile
                 )
             ) as T
