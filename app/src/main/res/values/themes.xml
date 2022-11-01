@@ -9,7 +9,6 @@
     <style name="Theme.Flyingboat" parent="Base.Theme.Flyingboat" />
 
     <style name="Theme.Flyingboat.Login" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/background_sky</item>
         <item name="android:colorPrimary">@color/dark_blue</item>
         <item name="colorSecondary">@color/darkish_blue</item>
         <item name="android:colorAccent">@color/blue</item>

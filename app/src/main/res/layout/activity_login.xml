@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.LoginActivity">
 
+    <ImageView
+        android:id="@+id/sky_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/sky_gradient"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/animated_sky" />
+
     <FrameLayout
         android:id="@+id/creatorHolder"
         android:layout_width="match_parent"
@@ -17,6 +29,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
+
+
+    <ImageView
+        android:id="@+id/plane"
+        android:layout_width="@dimen/plane_size"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/login_card_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/plane_plain" />
 
     <ImageView
         android:id="@+id/clouds"
@@ -35,13 +59,13 @@
         android:id="@+id/login_card_container"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white_translucent"
+        android:layout_marginBottom="-30dp"
+        app:cardBackgroundColor="@color/card_login"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/clouds"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <FrameLayout
             android:id="@+id/login_container"
@@ -61,7 +85,7 @@
                 android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="@color/darkish_blue"
+                android:textColor="@color/login_title"
                 android:textIsSelectable="false"
                 android:textSize="34sp"
                 android:textStyle="bold" />

@@ -11,5 +11,13 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
+    <color name="login_title">#1A406C</color>
     <color name="white_translucent">#B7FFFFFF</color>
+    <color name="card_login">@color/white_translucent</color>
+    <color name="baloon_overlay">#00FFFFFF</color>
+    <color name="cloud_color">#CDFFFFFF</color>
+    <color name="cloud_color_1">#BFffffff</color>
+    <color name="cloud_color_2">#BFececec</color>
+    <color name="cloud_color_3">#BFcccccc</color>
+    <color name="cloud_color_4">#BFb3b3b3</color>
 </resources>

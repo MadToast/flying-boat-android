@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.view.inputmethod.EditorInfo
@@ -38,22 +39,20 @@ import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModel
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Float.max
-import java.util.concurrent.ArrayBlockingQueue
 import kotlin.random.Random
 
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var creatorImageQueue: ArrayBlockingQueue<Drawable>
+    lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
@@ -64,9 +63,6 @@ class LoginActivity : AppCompatActivity() {
 
         //Initialize the loginViewModel
         loginViewModel.init()
-
-        //Start the immersion
-        setupImmersion(binding)
 
         //Initialize the login observers
         setupObservers(binding, loginViewModel)
@@ -86,8 +82,31 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupImmersion(binding: ActivityLoginBinding) {
+    override fun onStart() {
+        super.onStart()
+
+        //Start the animations
+        startAnimations()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        //Stop the animations to avoid background battery usage
+        stopAnimations()
+    }
+
+    private fun startAnimations() {
         (binding.clouds.drawable as AnimatedVectorDrawable).start()
+        (binding.skyBackground.drawable as AnimatedVectorDrawable).start()
+
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        binding.plane.startAnimation(animation)
+    }
+
+    private fun stopAnimations() {
+        (binding.clouds.drawable as AnimatedVectorDrawable).stop()
+        (binding.skyBackground.drawable as AnimatedVectorDrawable).stop()
     }
 
     private fun setupButtonEvents(binding: ActivityLoginBinding, loginViewModel: LoginViewModel) {
@@ -217,12 +236,13 @@ class LoginActivity : AppCompatActivity() {
         creators: Array<com.madtoast.flyingboat.api.floatplane.model.creator.Creator>
     ) {
         val activityContext = this
-        creatorImageQueue = ArrayBlockingQueue<Drawable>(creators.size)
-        var creatorWithLogos = 0
+        var animationDelay = 0L
         for (creator in creators) {
+            creator.id
+            val currentAnimationDelay = animationDelay
+            //Freeze this
             creator.icon?.apply {
                 path?.apply {
-                    creatorWithLogos++
                     Glide
                         .with(activityContext)
                         .load(this)
@@ -237,7 +257,6 @@ class LoginActivity : AppCompatActivity() {
                             ): Boolean {
                                 //Do nothing but log it
                                 Log.e(TAG, "Failed to load the ${creator.title} creator image")
-                                creatorImageQueue.add(null)
                                 return false
                             }
 
@@ -248,35 +267,22 @@ class LoginActivity : AppCompatActivity() {
                                 dataSource: DataSource?,
                                 isFirstResource: Boolean
                             ): Boolean {
-                                creatorImageQueue.add(resource)
+                                createImageForCreator(binding, resource, currentAnimationDelay)
                                 return true
                             }
                         })
                         .submit();
                 }
             }
-        }
-        processCreatorLogoQueue(creatorWithLogos, binding)
-    }
-
-    private fun processCreatorLogoQueue(creatorCount: Int, binding: ActivityLoginBinding) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var creatorCount = creatorCount
-            while (creatorCount > 0) {
-                try {
-                    createImageForCreator(binding, creatorImageQueue.take())
-                } catch (e: Exception) {
-                    // App was probably restarted due to configuration change
-                    Log.d(TAG, "Exception while creating creator logo")
-                }
-
-                creatorCount--
-                delay(5000L)
-            }
+            animationDelay += 10000L
         }
     }
 
-    private fun createImageForCreator(binding: ActivityLoginBinding, creatorLogo: Drawable?) {
+    private fun createImageForCreator(
+        binding: ActivityLoginBinding,
+        creatorLogo: Drawable?,
+        animationDelay: Long
+    ) {
         if (creatorLogo == null) {
             return
         }
@@ -294,11 +300,18 @@ class LoginActivity : AppCompatActivity() {
         val drawableOffsetX = creatorBalloon.minimumWidth
         val positionX = (binding.creatorHolder.width + drawableOffsetX).toFloat()
         val positionY = (partsOfScreen * Random.nextInt(5)).toFloat()
-        val scale = getScaleBasedOnPositionY(positionY, maxPositionY)
+        val scale = getRandomScale()
         val zIndex = getZIndexBasedOnScale(scale)
 
         // Setup the view
         creatorBalloonView.setImageDrawable(creatorBalloon)
+        creatorBalloonView.setColorFilter(
+            ResourcesCompat.getColor(
+                resources,
+                R.color.baloon_overlay,
+                null
+            )
+        )
         creatorBalloonView.scaleY = scale
         creatorBalloonView.scaleX = scale
         creatorBalloonView.translationZ = zIndex
@@ -309,35 +322,37 @@ class LoginActivity : AppCompatActivity() {
             it.gravity = (Gravity.START or Gravity.TOP)
         }
 
+
         // Setup the animation
-        val animation = TranslateAnimation(
+        val acrossScreenAnimation = TranslateAnimation(
             positionX,
             ((-creatorBalloon.minimumWidth) * 2).toFloat(), positionY, positionY
         )
-        animation.duration = getDurationBasedOnPositionY(positionY, maxPositionY)
-        animation.interpolator = LinearInterpolator()
-        animation.repeatMode = Animation.RESTART
-        animation.repeatCount = Animation.INFINITE
+        acrossScreenAnimation.duration = getDurationBasedOnPositionY(positionY, maxPositionY)
+        acrossScreenAnimation.interpolator = LinearInterpolator()
+        acrossScreenAnimation.repeatMode = Animation.RESTART
+        acrossScreenAnimation.repeatCount = Animation.INFINITE
+        acrossScreenAnimation.startOffset = animationDelay
 
         CoroutineScope(Dispatchers.Main).launch {
             binding.creatorHolder.addView(creatorBalloonView)
-            creatorBalloonView.startAnimation(animation)
+            creatorBalloonView.startAnimation(acrossScreenAnimation)
         }
     }
 
     private fun getDurationBasedOnPositionY(position: Float, viewHeight: Int): Long {
-        val minDuration = 20000f
-        val maxDuration = 30000f
+        val minDuration = 50000f
+        val maxDuration = 60000f
 
         // The bigger the position, the higher the speed
         return (maxDuration - ((position * minDuration) / viewHeight)).toLong()
     }
 
-    private fun getScaleBasedOnPositionY(position: Float, viewHeight: Int): Float {
-        val minScale = 0.3f
-        val maxScale = 1.4f
+    private fun getRandomScale(): Float {
+        val minScale = 0.5
+        val maxScale = 0.7
 
-        return max((position * maxScale) / viewHeight, minScale)
+        return Random.nextDouble(minScale, maxScale).toFloat()
     }
 
     private fun getZIndexBasedOnScale(scale: Float): Float {
@@ -379,7 +394,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+        if (errorString != R.string.enter_credentials)
+            Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading(text: String, binding: ActivityLoginBinding) {

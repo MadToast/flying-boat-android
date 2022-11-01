@@ -111,6 +111,12 @@ class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : V
                     )
                 }
             }
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            _creatorsResult.value = _creatorsResult.value
+            creatorsLoaded = true
         }
     }
 
