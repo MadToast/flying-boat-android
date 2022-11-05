@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="cloud_color">#CB203444</color>
+    <color name="cloud_color">#E6203444</color>
     <color name="cloud_color_1">#E1203444</color>
     <color name="cloud_color_2">#E11C2D3A</color>
     <color name="cloud_color_3">#E1172530</color>
@@ -8,4 +8,17 @@
     <color name="card_login">#B73E3E3E</color>
     <color name="login_title">#006DC3</color>
     <color name="baloon_overlay">#6300101C</color>
+    <color name="plane_blinking_green">#00ff00</color>
+    <color name="plane_blinking_red">#ff0000</color>
+    <color name="plane_blinking_white">#ffffff</color>
+    <!--<color name="plane_color_1">#8b8b8a</color>
+    <color name="plane_color_2">#003cb9</color>
+    <color name="plane_color_3">#848585</color>
+    <color name="plane_color_4">#8b8b8a</color>
+    <color name="plane_color_5">#bfc0c0</color>
+    <color name="plane_color_6">#4d4d4d</color>
+    <color name="plane_color_7">#575555</color>-->
+    <color name="sky_gradient_start">#003550</color>
+    <color name="sky_gradient_center">#001729</color>
+    <color name="sky_gradient_end">#000E19</color>
 </resources>

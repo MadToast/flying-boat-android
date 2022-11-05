@@ -15,5 +15,5 @@
     <dimen name="login_title_margin">60dp</dimen>
     <dimen name="login_card_margins">40dp</dimen>
     <dimen name="login_card_margin_bottom">-25dp</dimen>
-    <dimen name="plane_size">150dp</dimen>
+    <dimen name="plane_size">180dp</dimen>
 </resources>

@@ -1,18 +1,20 @@
 package com.madtoast.flyingboat.ui.activities
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.content.res.Configuration
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
-import android.view.animation.TranslateAnimation
+import android.view.animation.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -37,6 +39,7 @@ import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
 import com.madtoast.flyingboat.databinding.ActivityLoginBinding
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModel
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModelFactory
+import com.madtoast.flyingboat.ui.utilities.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,16 +50,17 @@ import kotlin.random.Random
 class LoginActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityLoginBinding
+    lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
-        val loginViewModel = ViewModelProvider(
+        loginViewModel = ViewModelProvider(
             this,
             LoginViewModelFactory(cacheDir, this)
         )[LoginViewModel::class.java]
@@ -96,12 +100,200 @@ class LoginActivity : AppCompatActivity() {
         stopAnimations()
     }
 
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide
+            .with(this)
+            .onLowMemory()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+
+        Glide
+            .with(this)
+            .onTrimMemory(level)
+    }
+
     private fun startAnimations() {
         (binding.clouds.drawable as AnimatedVectorDrawable).start()
         (binding.skyBackground.drawable as AnimatedVectorDrawable).start()
+        (binding.plane.drawable as AnimatedVectorDrawable).start()
 
-        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        binding.plane.startAnimation(animation)
+        if (loginViewModel.isFirstTimeLaunch) {
+            startFirstStartAnimations()
+            loginViewModel.isFirstTimeLaunch = false
+            return
+        }
+
+        startPlaneIdleAnimations()
+    }
+
+    private fun startFirstStartAnimations() {
+        val loginEnter = when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> AnimationUtils.loadAnimation(
+                this,
+                R.anim.login_slide_up
+            )
+            else -> AnimationUtils.loadAnimation(this, R.anim.login_slide_down)
+        }
+        binding.loginCardContainer.visibility = View.INVISIBLE
+
+        //Handle the plane rotation
+        with(
+            binding.plane.withAnimatorByFloat(
+                "rotation",
+                -45f,
+                -4f, true
+            )
+        ) {
+            duration = 1400
+            startDelay = 1000
+            interpolator = AccelerateDecelerateInterpolator()
+            doOnAnimatorEnd {
+                startPlaneIdleAnimations()
+                binding.loginCardContainer.visibility = View.VISIBLE
+                binding.loginCardContainer.startAnimation(loginEnter)
+            }
+            start()
+        }
+
+        // Use window insets on version code R and upper
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            //Fly plane on screen
+            with(
+                binding.plane.withAnimatorBasedOnWindowPercentage(
+                    "translationY",
+                    windowManager.currentWindowMetrics,
+                    0.8f,
+                    0f
+                )
+            ) {
+                duration = 2200
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+            with(
+                binding.plane.withAnimatorBasedOnWindowPercentage(
+                    "translationX",
+                    windowManager.currentWindowMetrics,
+                    -0.5f,
+                    0f
+                )
+            ) {
+                duration = 2200
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+
+            //Cloud parallax
+            with(
+                binding.starsBackground.withAnimatorBasedOnWindowPercentage(
+                    "translationY",
+                    windowManager.currentWindowMetrics,
+                    -0.85f,
+                    0f, true
+                )
+            ) {
+                duration = 1800
+                startDelay = 400
+                interpolator = AccelerateDecelerateInterpolator()
+                start()
+            }
+            with(
+                binding.clouds.withAnimatorBasedOnWindowPercentage(
+                    "translationY",
+                    windowManager.currentWindowMetrics,
+                    -0.85f,
+                    0f, true
+                )
+            ) {
+                duration = 1800
+                startDelay = 400
+                interpolator = AccelerateDecelerateInterpolator()
+                start()
+            }
+        } else {
+            val displayMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION") //No need to alert of deprecation as we have it behind a flag
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            //Fly on screen
+            with(
+                binding.plane.withAnimatorBasedOnDisplayPercentage(
+                    "translationY",
+                    displayMetrics,
+                    0.8f,
+                    0f
+                )
+            ) {
+                duration = 2000
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+            with(
+                binding.plane.withAnimatorBasedOnDisplayPercentage(
+                    "translationX",
+                    displayMetrics,
+                    -0.5f,
+                    0f
+                )
+            ) {
+                duration = 2000
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+
+            //Cloud parallax
+            with(
+                binding.starsBackground.withAnimatorBasedOnDisplayPercentage(
+                    "translationY",
+                    displayMetrics,
+                    -0.85f,
+                    0f, true
+                )
+            ) {
+                duration = 1800
+                startDelay = 400
+                interpolator = AccelerateDecelerateInterpolator()
+                start()
+            }
+            with(
+                binding.clouds.withAnimatorBasedOnDisplayPercentage(
+                    "translationY",
+                    displayMetrics,
+                    -0.85f,
+                    0f, true
+                )
+            ) {
+                duration = 1800
+                startDelay = 400
+                interpolator = AccelerateDecelerateInterpolator()
+                start()
+            }
+        }
+    }
+
+    private fun startPlaneIdleAnimations() {
+        val percentageEnd = when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> 0.2f
+            else -> 0.6f
+        }
+
+        with(binding.plane.withAnimatorByPercentage("translationY", 0f, percentageEnd)) {
+            startDelay = 2000
+            duration = 4000
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            start()
+        }
+
+        with(ObjectAnimator.ofFloat(binding.plane, "rotation", -4f, 4f)) {
+            duration = 4000
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            start()
+        }
     }
 
     private fun stopAnimations() {
@@ -235,7 +427,8 @@ class LoginActivity : AppCompatActivity() {
         binding: ActivityLoginBinding,
         creators: Array<com.madtoast.flyingboat.api.floatplane.model.creator.Creator>
     ) {
-        val activityContext = this
+        binding.creatorHolder.removeAllViews()
+
         var animationDelay = 0L
         for (creator in creators) {
             creator.id
@@ -244,7 +437,7 @@ class LoginActivity : AppCompatActivity() {
             creator.icon?.apply {
                 path?.apply {
                     Glide
-                        .with(activityContext)
+                        .with(this@LoginActivity)
                         .load(this)
                         .circleCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)

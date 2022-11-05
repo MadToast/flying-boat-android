@@ -6,14 +6,6 @@
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:duration="3000"
-                    android:propertyName="translateY"
-                    android:valueFrom="50"
-                    android:valueTo="30"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
                     android:valueFrom="1050"
@@ -27,15 +19,6 @@
     <target android:name="cloud_2">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="300"
-                    android:propertyName="translateY"
-                    android:valueFrom="200"
-                    android:valueTo="180"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
@@ -51,39 +34,21 @@
     <target android:name="cloud_3">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="600"
-                    android:propertyName="translateY"
-                    android:valueFrom="350"
-                    android:valueTo="330"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
-                    android:duration="60000"
-                    android:propertyName="translateX"
-                    android:valueFrom="1050"
-                    android:valueTo="-150"
-                    android:startOffset="8000"
-                    android:repeatMode="restart"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/linear_interpolator" />
+               <objectAnimator
+                   android:duration="60000"
+                   android:propertyName="translateX"
+                   android:valueFrom="1050"
+                   android:valueTo="-150"
+                   android:startOffset="8000"
+                   android:repeatMode="restart"
+                   android:repeatCount="infinite"
+                   android:interpolator="@android:anim/linear_interpolator" />
             </set>
         </aapt:attr>
     </target>
     <target android:name="cloud_4">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="400"
-                    android:propertyName="translateY"
-                    android:valueFrom="500"
-                    android:valueTo="480"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
@@ -100,15 +65,6 @@
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:duration="15000"
-                    android:delay="100"
-                    android:propertyName="translateY"
-                    android:valueFrom="650"
-                    android:valueTo="630"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
                     android:valueFrom="1050"
@@ -123,15 +79,6 @@
     <target android:name="cloud_6">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="700"
-                    android:propertyName="translateY"
-                    android:valueFrom="800"
-                    android:valueTo="780"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
@@ -148,15 +95,7 @@
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:duration="3000"
-                    android:propertyName="translateY"
-                    android:valueFrom="100"
-                    android:valueTo="80"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
-                    android:duration="15000"
+                    android:duration="60000"
                     android:propertyName="translateX"
                     android:valueFrom="1050"
                     android:valueTo="-150"
@@ -170,15 +109,6 @@
     <target android:name="cloud_8">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="300"
-                    android:propertyName="translateY"
-                    android:valueFrom="250"
-                    android:valueTo="230"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
@@ -195,15 +125,6 @@
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:duration="15000"
-                    android:delay="600"
-                    android:propertyName="translateY"
-                    android:valueFrom="400"
-                    android:valueTo="380"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
                     android:valueFrom="1050"
@@ -218,15 +139,6 @@
     <target android:name="cloud_10">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="400"
-                    android:propertyName="translateY"
-                    android:valueFrom="550"
-                    android:valueTo="530"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
@@ -243,15 +155,6 @@
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:duration="15000"
-                    android:delay="100"
-                    android:propertyName="translateY"
-                    android:valueFrom="720"
-                    android:valueTo="700"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
-                <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"
                     android:valueFrom="1050"
@@ -266,15 +169,6 @@
     <target android:name="cloud_12">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator
-                    android:duration="15000"
-                    android:delay="700"
-                    android:propertyName="translateY"
-                    android:valueFrom="850"
-                    android:valueTo="830"
-                    android:repeatMode="reverse"
-                    android:repeatCount="infinite"
-                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
                 <objectAnimator
                     android:duration="60000"
                     android:propertyName="translateX"

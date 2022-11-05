@@ -25,6 +25,7 @@ class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : V
     private val _creatorsResult = MutableLiveData<UiResult<Array<Creator>>>()
     val creatorsResult: LiveData<UiResult<Array<Creator>>> = _creatorsResult
 
+    var isFirstTimeLaunch = true
     private var creatorsLoaded = false
 
     private val _errorHandler = ErrorHandler()

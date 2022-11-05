@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/plane_plain">
+    <target android:name="slow_blinking_lights">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="1000"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="blinking_lights">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="200"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="blinking_lights1">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="200"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="blinking_lights2">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="200"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

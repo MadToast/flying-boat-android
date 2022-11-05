@@ -20,4 +20,18 @@
     <color name="cloud_color_2">#BFececec</color>
     <color name="cloud_color_3">#BFcccccc</color>
     <color name="cloud_color_4">#BFb3b3b3</color>
+    <color name="plane_blinking_green">#00000000</color>
+    <color name="plane_blinking_red">#00000000</color>
+    <color name="plane_blinking_white">#00000000</color>
+    <!--<color name="plane_color_1">#ffffff</color>
+    <color name="plane_color_2">#0085ff</color>
+    <color name="plane_color_3">#848585</color>
+    <color name="plane_color_4">#f2f2f2</color>
+    <color name="plane_color_5">#bfc0c0</color>
+    <color name="plane_color_6">#0064de</color>
+    <color name="plane_color_7">#cccccc</color>-->
+    <color name="sky_gradient_start">#D8F2FF</color>
+    <color name="sky_gradient_center">#0090FE</color>
+    <color name="sky_gradient_end">#007EDF</color>
+    <color name="sky_color">#007EDF</color>
 </resources>
