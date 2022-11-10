@@ -3,6 +3,7 @@ package com.madtoast.flyingboat.ui.components.adapters
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.madtoast.flyingboat.ui.components.views.CreatorItemView
 import com.madtoast.flyingboat.ui.components.views.LoadingView
 import com.madtoast.flyingboat.ui.components.views.PostView
 
@@ -10,11 +11,23 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
+        val viewHolder = when (viewType) {
             PostView.VIEW_TYPE -> PostView.Companion.PostViewHolder(PostView(viewGroup.context))
             LoadingView.VIEW_TYPE -> LoadingView.Companion.LoadingViewHolder(LoadingView(viewGroup.context))
+            CreatorItemView.VIEW_TYPE -> CreatorItemView.Companion.CreatorItemViewHolder(
+                CreatorItemView(viewGroup.context)
+            )
             else -> throw NotImplementedError("View type is not implemented in adapter!")
         }
+
+        viewHolder.setLayoutParamsToView(
+            RecyclerView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        return viewHolder
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -29,14 +42,14 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updatePostDataSet(postItems: ArrayList<BaseItem>) {
+    fun updateDataSet(baseItems: ArrayList<BaseItem>) {
         this.dataSet.clear()
-        this.dataSet = postItems
+        this.dataSet = baseItems
         notifyDataSetChanged()
     }
 
-    fun addItem(postItem: BaseItem) {
-        this.dataSet.add(postItem)
+    fun addItem(baseItem: BaseItem) {
+        this.dataSet.add(baseItem)
         notifyItemInserted(this.dataSet.size - 1);
     }
 
@@ -51,6 +64,6 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
     }
 
     companion object {
-        const val TAG = "PostViewAdapter"
+        const val TAG = "BaseViewAdapter"
     }
 }

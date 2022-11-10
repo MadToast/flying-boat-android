@@ -2,6 +2,8 @@ package com.madtoast.flyingboat.ui.activities
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
@@ -37,6 +39,7 @@ import com.bumptech.glide.request.target.Target
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
 import com.madtoast.flyingboat.databinding.ActivityLoginBinding
+import com.madtoast.flyingboat.network.NetworkLiveData
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModel
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModelFactory
 import com.madtoast.flyingboat.ui.utilities.*
@@ -51,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityLoginBinding
     lateinit var loginViewModel: LoginViewModel
+    lateinit var networkLiveData: NetworkLiveData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -65,25 +69,22 @@ class LoginActivity : AppCompatActivity() {
             LoginViewModelFactory(cacheDir, this)
         )[LoginViewModel::class.java]
 
+        networkLiveData = NetworkLiveData()
+
         //Initialize the loginViewModel
         loginViewModel.init()
 
+        //Initialize the network live data
+        networkLiveData.init(application)
+
         //Initialize the login observers
-        setupObservers(binding, loginViewModel)
+        setupObservers(binding, loginViewModel, networkLiveData)
 
         //Initialize login fields
         setupLoginFields(binding, loginViewModel)
 
         //Initialize the button events
         setupButtonEvents(binding, loginViewModel)
-
-        //Check if user's logged in
-        binding.loginFields.visibility = View.GONE
-        showLoading(getString(R.string.initial_app_loading), binding)
-        CoroutineScope(Dispatchers.IO).launch {
-            loginViewModel.checkUserLoggedIn()
-            loginViewModel.getAllPlatformCreators()
-        }
     }
 
     override fun onStart() {
@@ -113,6 +114,14 @@ class LoginActivity : AppCompatActivity() {
         Glide
             .with(this)
             .onTrimMemory(level)
+    }
+
+    private fun doPreChecks() {
+        //Check if user's logged in
+        showLoading(getString(R.string.initial_app_loading), binding)
+        CoroutineScope(Dispatchers.IO).launch {
+            loginViewModel.checkUserLoggedIn()
+        }
     }
 
     private fun startAnimations() {
@@ -151,6 +160,7 @@ class LoginActivity : AppCompatActivity() {
             startDelay = 1000
             interpolator = AccelerateDecelerateInterpolator()
             doOnAnimatorEnd {
+                doPreChecks()
                 startPlaneIdleAnimations()
                 binding.loginCardContainer.visibility = View.VISIBLE
                 binding.loginCardContainer.startAnimation(loginEnter)
@@ -362,13 +372,25 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupObservers(binding: ActivityLoginBinding, loginViewModel: LoginViewModel) {
+    private fun setupObservers(
+        binding: ActivityLoginBinding,
+        loginViewModel: LoginViewModel,
+        networkLiveData: NetworkLiveData
+    ) {
         val twoFactor = binding.TwoFactorFields
         val loginFields = binding.loginFields
         val username = binding.usernameText
         val password = binding.passwordText
         val twoFactorToken = binding.twoFactorToken
         val btnLogin = binding.loginButton
+
+        networkLiveData.observe(this@LoginActivity, Observer {
+            if (it && !loginViewModel.creatorsLoaded) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    loginViewModel.getAllPlatformCreators()
+                }
+            }
+        })
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -576,14 +598,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun finishLoginProcess(model: AuthResponse) {
-        val welcome = getString(R.string.welcome)
-        val userName = model.user?.username
+        //Set the Activity result
+        setResult(Activity.RESULT_OK)
 
-        Toast.makeText(
-            applicationContext,
-            "$welcome $userName !",
-            Toast.LENGTH_LONG
-        ).show()
+        //Start next Activity
+        val myIntent = Intent(this@LoginActivity, MainActivity2::class.java)
+        startActivity(myIntent)
+
+        //Finish the login activity
+        finish()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
@@ -592,6 +615,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoading(text: String, binding: ActivityLoginBinding) {
+        binding.loginFields.visibility = View.GONE
+        binding.TwoFactorFields.visibility = View.GONE
         binding.loading.visibility = View.VISIBLE
         binding.loadingText.text = text
     }

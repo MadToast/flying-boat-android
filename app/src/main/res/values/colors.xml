@@ -34,4 +34,5 @@
     <color name="sky_gradient_center">#0090FE</color>
     <color name="sky_gradient_end">#007EDF</color>
     <color name="sky_color">#007EDF</color>
+    <color name="category_color">#ffffff</color>
 </resources>

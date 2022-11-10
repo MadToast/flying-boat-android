@@ -74,7 +74,7 @@ class PostView : FrameLayout {
     }
 
     private fun setThumbnailFailed() {
-        thumbnailLoadingView.visibility = View.GONE
+        thumbnailLoadingView.visibility = View.INVISIBLE
         errorTextView.visibility = View.VISIBLE
     }
 
@@ -91,12 +91,7 @@ class PostView : FrameLayout {
         Glide.with(context).clear(creatorView)
     }
 
-    fun setDataToView(data: Any) {
-        // Sanity check
-        if ((data !is PostItem) || (data.Post == null)) {
-            throw NotImplementedError("Data assigned to PostView is not a Post!")
-        }
-
+    fun setDataToView(data: PostItem) {
         // Set view default state
         resetUiState()
 
@@ -104,7 +99,7 @@ class PostView : FrameLayout {
         clearAnyGlideRequest()
 
         // Set a reference to the post data
-        data.Post.apply {
+        data.Post?.apply {
             // Load the data to set
             val thumbnailToLoad = selectImageQuality(context, thumbnail)
             val creatorLogoToLoad = selectImageQuality(context, creator?.icon)
@@ -212,7 +207,16 @@ class PostView : FrameLayout {
             }
 
             override fun setDataToView(data: Any) {
+                // Sanity check
+                if ((data !is PostItem) || (data.Post == null)) {
+                    throw NotImplementedError("Data assigned to PostView is not a Post or is null!")
+                }
+
                 postView.setDataToView(data)
+            }
+
+            override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
+                postView.layoutParams = layoutParams
             }
         }
 

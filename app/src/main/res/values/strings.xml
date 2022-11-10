@@ -205,4 +205,6 @@
     </string>
     <string name="creator_title_example">Linus Tech Tips</string>
     <string name="duration_example">01:00:00</string>
+    <string name="creator_description_example">We make entertaining videos about technology, including tech reviews, showcases and other content.</string>
+    <string name="category_example">Technology</string>
 </resources>

@@ -3,9 +3,11 @@ package com.madtoast.flyingboat.ui.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.madtoast.flyingboat.R
@@ -38,5 +40,10 @@ class MainActivity2 : AppCompatActivity() {
         navView?.setupWithNavController(navController)
 
         tabletNavView?.setupWithNavController(navController)
+
+        //Don't scroll toolbar
+        binding.toolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
+            scrollFlags = 0
+        }
     }
 }

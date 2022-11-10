@@ -84,7 +84,6 @@
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="50dp"
             app:cardBackgroundColor="@color/card_login"
             app:cardCornerRadius="30dp"
             app:cardElevation="0dp">
@@ -212,11 +211,11 @@
                 <LinearLayout
                     android:id="@+id/loading"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/login_title_margin"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="invisible">
 
                     <ProgressBar
                         style="?android:attr/progressBarStyle"

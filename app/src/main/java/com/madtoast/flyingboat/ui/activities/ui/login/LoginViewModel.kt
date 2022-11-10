@@ -26,7 +26,7 @@ class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : V
     val creatorsResult: LiveData<UiResult<Array<Creator>>> = _creatorsResult
 
     var isFirstTimeLaunch = true
-    private var creatorsLoaded = false
+    var creatorsLoaded = false
 
     private val _errorHandler = ErrorHandler()
     private var hasInitialized = false
@@ -94,21 +94,30 @@ class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : V
 
     suspend fun getAllPlatformCreators() {
         if (!creatorsLoaded) {
-            val result =
-                floatplaneRepository.handleResponse(floatplaneRepository.creatorV3().discover())
+            try {
+                val result =
+                    floatplaneRepository.handleResponse(floatplaneRepository.creatorV3().discover())
 
-            CoroutineScope(Dispatchers.Main).launch {
-                if (result is Result.Success) {
-                    _creatorsResult.value =
-                        UiResult(success = result.data)
-                    creatorsLoaded = true
-                } else {
-                    _creatorsResult.value = UiResult(
-                        error = _errorHandler.handleResponseError(
-                            result,
-                            R.string.bad_request,
-                            R.string.bad_token
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (result is Result.Success) {
+                        _creatorsResult.value =
+                            UiResult(success = result.data)
+                        creatorsLoaded = true
+                    } else {
+                        _creatorsResult.value = UiResult(
+                            error = _errorHandler.handleResponseError(
+                                result,
+                                R.string.bad_request,
+                                R.string.bad_token
+                            )
                         )
+                    }
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace() //Print the stack trace
+                CoroutineScope(Dispatchers.Main).launch {
+                    _creatorsResult.value = UiResult(
+                        error = R.string.network_error
                     )
                 }
             }

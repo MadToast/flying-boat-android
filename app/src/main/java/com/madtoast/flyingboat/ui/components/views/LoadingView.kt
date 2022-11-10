@@ -71,6 +71,10 @@ class LoadingView : LinearLayout {
             override fun setDataToView(data: Any) {
                 loadingView.setDataToView(data)
             }
+
+            override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
+                loadingView.layoutParams = layoutParams
+            }
         }
 
         class LoadingItem(

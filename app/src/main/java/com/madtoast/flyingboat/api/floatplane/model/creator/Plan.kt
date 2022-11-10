@@ -4,16 +4,16 @@ import com.madtoast.flyingboat.api.floatplane.model.content.Image
 
 data class Plan(
     val id: String?,
-    val allowGrandfatheredAccess: Boolean,
+    val allowGrandfatheredAccess: Boolean?,
     val creator: String?,
     val createdAt: String?,
     val currency: String?,
     val description: String?,
     val discordRoles: Array<DiscordRole>?,
     val discordServer: Array<DiscordServer>?,
-    val enabled: Boolean,
-    val enabledGlobal: Boolean,
-    val featured: Boolean,
+    val enabled: Boolean?,
+    val enabledGlobal: Boolean?,
+    val featured: Boolean?,
     val interval: String?,
     val logo: Image?,
     val price: String?,
@@ -21,8 +21,8 @@ data class Plan(
     val title: String?,
     val trialPeriod: Int?,
     val updatedAt: String?,
-    val userIsGrandfathered: Boolean,
-    val userIsSubscribed: Boolean
+    val userIsGrandfathered: Boolean?,
+    val userIsSubscribed: Boolean?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

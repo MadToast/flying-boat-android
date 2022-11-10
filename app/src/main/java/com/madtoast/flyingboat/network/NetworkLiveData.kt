@@ -10,7 +10,7 @@ import android.net.NetworkRequest
 import android.os.Build
 import androidx.lifecycle.LiveData
 
-object NetworkLiveData : LiveData<Boolean>() {
+class NetworkLiveData : LiveData<Boolean>() {
     private lateinit var application: Application
     private lateinit var networkRequest: NetworkRequest
     override fun onActive() {
