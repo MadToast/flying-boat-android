@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="list_subheader_text_color">#989898</color>
+    <color name="list_header_text_color">#D3D3D3</color>
     <color name="cloud_color">#E6203444</color>
     <color name="cloud_color_1">#E1203444</color>
     <color name="cloud_color_2">#E11C2D3A</color>
@@ -21,4 +23,10 @@
     <color name="sky_gradient_start">#003550</color>
     <color name="sky_gradient_center">#001729</color>
     <color name="sky_gradient_end">#000E19</color>
+    <color name="toolbar_background">#F2191C1E</color>
+    <color name="placeholder_cover_background">#2E2E2E</color>
+    <color name="placeholder_cover_mountains">#101010</color>
+    <color name="placeholder_cover_sun">#B1B1B1</color>
+    <color name="logo_placeholder_background">#232323</color>
+    <color name="logo_placeholder_icon">#737373</color>
 </resources>

@@ -2,16 +2,15 @@ package com.madtoast.flyingboat.ui.components.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
 
-class LoadingView : LinearLayout {
-    private lateinit var loadingView: ProgressBar
+class TextItemView : LinearLayout {
+    lateinit var titleTextView: TextView
 
     constructor(context: Context) : super(context) {
         init()
@@ -30,49 +29,45 @@ class LoadingView : LinearLayout {
     }
 
     private fun init() {
-        val view = inflate(context, VIEW_TYPE, this);
+        val layout = inflate(context, R.layout.item_list_text, this)
 
-        loadingView = view.findViewById(R.id.loadingProgress)
+        titleTextView = layout.findViewById(R.id.titleTextView)
     }
 
 
     fun setDataToView(data: Any) {
         // Sanity check
-        if (data !is LoadingItem) {
-            throw NotImplementedError("Data assigned is not the correct type! Correct type is ${LoadingItem::class.simpleName}")
+        if (data !is TextItem) {
+            throw NotImplementedError("Data assigned is not the correct type! Correct type is ${TextItem::class.simpleName}")
         }
 
         data.apply {
-            loadingView.visibility = if (showProgress) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            titleTextView.text = label
         }
     }
 
     companion object {
-        const val VIEW_TYPE = R.layout.item_loading
+        const val VIEW_TYPE = R.layout.item_list_text
 
-        class LoadingViewHolder(view: LoadingView) : RecyclerView.ViewHolder(view),
+        class TextItemViewHolder(view: TextItemView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val loadingView: LoadingView
+            private val textItemView: TextItemView
 
             init {
-                loadingView = view
+                textItemView = view
             }
 
             override fun setDataToView(data: Any) {
-                loadingView.setDataToView(data)
+                textItemView.setDataToView(data)
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                loadingView.layoutParams = layoutParams
+                textItemView.layoutParams = layoutParams
             }
         }
 
-        class LoadingItem(
-            val showProgress: Boolean
+        class TextItem(
+            val label: String?
         ) : BaseItem {
             override fun getItemType(): Int {
                 return VIEW_TYPE

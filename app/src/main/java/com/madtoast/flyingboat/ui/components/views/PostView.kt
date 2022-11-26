@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -86,6 +87,28 @@ class PostView : FrameLayout {
         creatorView.setImageResource(R.drawable.logo_creator_placeholder)
     }
 
+    private fun setMinifiedView(minified: Boolean) {
+        creatorView.visibility = if (minified) {
+            GONE
+        } else {
+            VISIBLE
+        }
+
+        creatorTitleView.visibility = if (minified) {
+            GONE
+        } else {
+            VISIBLE
+        }
+
+        this.updateLayoutParams {
+            width = if (minified) {
+                resources.getDimensionPixelSize(R.dimen.post_item_minified)
+            } else {
+                LayoutParams.MATCH_PARENT
+            }
+        }
+    }
+
     private fun clearAnyGlideRequest() {
         Glide.with(context).clear(thumbnailView)
         Glide.with(context).clear(creatorView)
@@ -97,6 +120,8 @@ class PostView : FrameLayout {
 
         // Clear any glide request (in case user is fast scrolling)
         clearAnyGlideRequest()
+
+        setMinifiedView(data.Minified)
 
         // Set a reference to the post data
         data.Post?.apply {
@@ -208,8 +233,8 @@ class PostView : FrameLayout {
 
             override fun setDataToView(data: Any) {
                 // Sanity check
-                if ((data !is PostItem) || (data.Post == null)) {
-                    throw NotImplementedError("Data assigned to PostView is not a Post or is null!")
+                if ((data !is PostItem)) {
+                    throw NotImplementedError("Data assigned is not the correct type! Correct type is ${PostView::class.simpleName}")
                 }
 
                 postView.setDataToView(data)
@@ -221,7 +246,8 @@ class PostView : FrameLayout {
         }
 
         class PostItem(
-            val Post: Post?
+            val Post: Post,
+            val Minified: Boolean = false
         ) : BaseItem {
             override fun getItemType(): Int {
                 return VIEW_TYPE

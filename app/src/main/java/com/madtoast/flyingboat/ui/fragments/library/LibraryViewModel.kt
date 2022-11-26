@@ -1,4 +1,4 @@
-package com.madtoast.flyingboat.ui.fragments.notifications
+package com.madtoast.flyingboat.ui.fragments.library
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

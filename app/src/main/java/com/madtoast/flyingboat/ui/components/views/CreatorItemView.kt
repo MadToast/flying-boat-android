@@ -64,6 +64,7 @@ class CreatorItemView : FrameLayout {
     private fun resetUiState() {
         errorTextView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
+
     }
 
     private fun stopCoverLoading() {
@@ -89,7 +90,6 @@ class CreatorItemView : FrameLayout {
     }
 
     fun setDataToView(data: CreatorItem) {
-
         // Set view default state
         resetUiState()
 
@@ -157,7 +157,7 @@ class CreatorItemView : FrameLayout {
     }
 
     companion object {
-        const val VIEW_TYPE = R.layout.creator_list_item
+        const val VIEW_TYPE = R.layout.item_creator_list
 
         class CreatorItemViewHolder(view: CreatorItemView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
@@ -170,7 +170,7 @@ class CreatorItemView : FrameLayout {
             override fun setDataToView(data: Any) {
                 // Sanity check
                 if ((data !is CreatorItem) || (data.Creator == null)) {
-                    throw NotImplementedError("Data assigned to CreatorView is not a Creator!")
+                    throw NotImplementedError("Data assigned is not the correct type! Correct type is ${CreatorItem::class.simpleName}")
                 }
 
                 creatorView.setDataToView(data)

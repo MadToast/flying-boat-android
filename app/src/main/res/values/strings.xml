@@ -12,7 +12,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome"</string>
+    <string name="welcome">"Welcome! Here's your content for today"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be more than 5 characters</string>
     <string name="invalid_token">Token must be more than 5 characters</string>
@@ -35,6 +35,17 @@
     <string name="title_home">Home</string>
     <string name="title_creators">Creators</string>
     <string name="title_library">Library</string>
+    <string name="subscribed">Subscribed</string>
+    <string name="unsubscribed">Available Creators</string>
+    <string name="posts_title">Posts</string>
+    <string name="playlists_title">Playlists</string>
+    <string name="about_tab">About</string>
+    <string name="text_post_title">Other</string>
+    <string name="content_tab_tile">Content</string>
+    <string name="audio_tab_title">Audios</string>
+    <string name="video_tab_title">Videos</string>
+    <string name="latest_content_header">Latest content from</string>
+    <string name="discover_content_header">Discover new content with</string>
 
     <!-- Plurals -->
     <plurals name="secondsAgo">

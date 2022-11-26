@@ -37,7 +37,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.madtoast.flyingboat.R
-import com.madtoast.flyingboat.api.floatplane.model.authentication.AuthResponse
 import com.madtoast.flyingboat.databinding.ActivityLoginBinding
 import com.madtoast.flyingboat.network.NetworkLiveData
 import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModel
@@ -286,7 +285,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun startPlaneIdleAnimations() {
         val percentageEnd = when (resources.configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> 0.2f
+            Configuration.ORIENTATION_PORTRAIT -> 0.1f
             else -> 0.6f
         }
 
@@ -432,7 +431,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    finishLoginProcess(loginResult.success)
+                    finishLoginProcess()
                 }
             }
         })
@@ -597,7 +596,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun finishLoginProcess(model: AuthResponse) {
+    private fun finishLoginProcess() {
         //Set the Activity result
         setResult(Activity.RESULT_OK)
 

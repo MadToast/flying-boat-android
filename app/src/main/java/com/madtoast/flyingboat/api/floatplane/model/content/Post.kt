@@ -23,8 +23,8 @@ data class Post(
     val thumbnail: Image?,
     val isAccessible: Boolean,
     val userInteraction: Interaction?,
-    val videoAttachments: Array<Post>?,
-    val audioAttachments: Array<Post>?,
+    val videoAttachments: Array<Any>?,
+    val audioAttachments: Array<Any>?,
     val createdAt: String?
 ) {
     override fun equals(other: Any?): Boolean {

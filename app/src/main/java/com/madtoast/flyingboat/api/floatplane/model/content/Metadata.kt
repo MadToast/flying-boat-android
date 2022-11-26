@@ -11,5 +11,5 @@ data class Metadata(
     val pictureCount: Int,
     val hasGallery: Boolean,
     val galleryCount: Int,
-    val isFeature: Boolean,
+    val isFeature: Boolean?,
 )

@@ -81,8 +81,8 @@
 
                 <com.madtoast.flyingboat.ui.components.views.CircleImageView
                     android:id="@+id/creatorLogo"
-                    android:layout_width="@dimen/post_item_creator_logo_dimen"
-                    android:layout_height="@dimen/post_item_creator_logo_dimen"
+                    android:layout_width="@dimen/creator_item_logo_dimen"
+                    android:layout_height="@dimen/creator_item_logo_dimen"
                     android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/logo_creator_placeholder" />
 

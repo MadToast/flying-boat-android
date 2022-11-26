@@ -3,6 +3,8 @@ package com.madtoast.flyingboat.ui.utilities
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Property
@@ -10,11 +12,14 @@ import android.view.View
 import android.view.WindowMetrics
 import android.view.animation.Animation
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.content.Image
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import kotlin.math.floor
+import kotlin.math.roundToInt
+
 
 fun parseUserReadableDatePublished(context: Context, instant: Instant): String {
     val now = Instant.now()
@@ -271,4 +276,46 @@ fun View.withAnimatorByPercentage(
     }
 
     return ObjectAnimator.ofFloat(this, objectProperty, percentageStart, percentageEnd);
+}
+
+/**
+ * If the calculated brightness is higher than 128, it's considered light. If not, then it's dark.
+ */
+fun calculateBrightness(bitmap: Bitmap, scale: Float): Int {
+    if (scale > 1) {
+        throw IllegalArgumentException("Scale should not be bigger than 1.0")
+    }
+
+    var red = 0
+    var green = 0
+    var blue = 0
+    val height = bitmap.height
+    val width = bitmap.width
+    var numberOfPixels = 0
+    val pixels = IntArray(width * height)
+    val calculatedPixelSkip = (pixels.size * scale).roundToInt()
+    bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+    var i = 0
+    while (i < pixels.size) {
+        val color = pixels[i]
+        red += Color.red(color)
+        green += Color.green(color)
+        blue += Color.blue(color)
+        numberOfPixels++
+        i += calculatedPixelSkip
+    }
+    return (red + green + blue) / (numberOfPixels * 3)
+}
+
+/**
+ * Extension function to simplify setting an afterTextChanged action to EditText components.
+ */
+fun RecyclerView.onScrolledListener(onScrolled: (recyclerView: RecyclerView) -> Unit) {
+    this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            onScrolled.invoke(recyclerView)
+        }
+    })
 }

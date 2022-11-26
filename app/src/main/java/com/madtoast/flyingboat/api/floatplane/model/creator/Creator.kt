@@ -5,22 +5,23 @@ import com.madtoast.flyingboat.api.floatplane.model.content.Image
 import com.madtoast.flyingboat.api.floatplane.model.content.LiveStream
 
 data class Creator(
-    val id: String?,
-    val owner: Any?,
-    val title: String?,
-    val urlname: String?,
-    val description: String?,
-    val discoverable: Boolean,
-    val about: String?,
-    val category: Category?,
-    val cover: Image?,
-    val icon: Image?,
-    val liveStream: LiveStream?,
-    val subscriptionPlans: Array<Plan>?,
-    val subscriberCountDisplay: String?,
-    val incomeDisplay: Boolean,
-    val socialLinks: Map<String, String>?,
-    val createdAt: String?
+    val id: String? = null,
+    val owner: Any? = null,
+    val title: String? = null,
+    val urlname: String? = null,
+    val description: String? = null,
+    val discoverable: Boolean = false,
+    val about: String? = null,
+    val category: Category? = null,
+    val cover: Image? = null,
+    val icon: Image? = null,
+    val liveStream: LiveStream? = null,
+    val subscriptionPlans: Array<Plan>? = null,
+    val subscriberCountDisplay: String? = null,
+    val incomeDisplay: Boolean = false,
+    val socialLinks: Map<String, String>? = null,
+    val createdAt: String? = null,
+    var userSubscribed: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -52,22 +53,28 @@ data class Creator(
     }
 
     override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (owner?.hashCode() ?: 0)
-        result = 31 * result + (title?.hashCode() ?: 0)
-        result = 31 * result + (urlname?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + discoverable.hashCode()
-        result = 31 * result + (about?.hashCode() ?: 0)
-        result = 31 * result + (category?.hashCode() ?: 0)
-        result = 31 * result + (cover?.hashCode() ?: 0)
-        result = 31 * result + (icon?.hashCode() ?: 0)
-        result = 31 * result + (liveStream?.hashCode() ?: 0)
-        result = 31 * result + (subscriptionPlans?.contentHashCode() ?: 0)
-        result = 31 * result + (subscriberCountDisplay?.hashCode() ?: 0)
-        result = 31 * result + incomeDisplay.hashCode()
-        result = 31 * result + (socialLinks?.hashCode() ?: 0)
-        result = 31 * result + (createdAt?.hashCode() ?: 0)
-        return result
+        return id?.hashCode() ?: 0
+    }
+
+    class SubscribedComparator : Comparator<Creator> {
+        override fun compare(o1: Creator?, o2: Creator?): Int {
+            return when {
+                o1 == null && o2 == null -> 0
+                o1 == null -> -1
+                o2 == null -> 1
+                else -> o1.userSubscribed.compareTo(o2.userSubscribed)
+            }
+        }
+    }
+
+    class CategoryComparator : Comparator<Creator> {
+        override fun compare(o1: Creator?, o2: Creator?): Int {
+            return when {
+                o1?.category?.title == null && o2?.category?.title == null -> 0
+                o1?.category?.title == null -> -1
+                o2?.category?.title == null -> 1
+                else -> o1.category.title.compareTo(o2.category.title)
+            }
+        }
     }
 }

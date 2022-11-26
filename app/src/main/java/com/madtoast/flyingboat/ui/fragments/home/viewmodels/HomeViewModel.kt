@@ -1,11 +1,13 @@
-package com.madtoast.flyingboat.ui.fragments.creators.viewmodels
+package com.madtoast.flyingboat.ui.fragments.home.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.ErrorHandler
+import com.madtoast.flyingboat.api.floatplane.model.content.Post
 import com.madtoast.flyingboat.api.floatplane.model.creator.Creator
+import com.madtoast.flyingboat.api.floatplane.model.enums.SortType
 import com.madtoast.flyingboat.data.FloatplaneRepository
 import com.madtoast.flyingboat.data.Result
 import com.madtoast.flyingboat.ui.activities.ui.login.UiResult
@@ -14,19 +16,98 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.Instant
 
-class CreatorsViewModel(private val floatplaneRepository: FloatplaneRepository) : ViewModel() {
+
+class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : ViewModel() {
+    private val _creatorContent: HashMap<Creator, MutableLiveData<UiResult<ArrayList<Post>>>> =
+        HashMap()
+    val creatorContent: HashMap<Creator, LiveData<UiResult<ArrayList<Post>>>> =
+        HashMap() //Add Live Data for each creator
+    private var contentLoaded = false
+
     private val _creatorsResult = MutableLiveData<UiResult<Array<Creator>>>()
     val creatorsResult: LiveData<UiResult<Array<Creator>>> = _creatorsResult
-
     private var creatorsLoaded = false
 
     private val _errorHandler = ErrorHandler()
     private var hasInitialized = false
 
-    fun init() {
+    init {
         if (!hasInitialized) {
             floatplaneRepository.init()
             hasInitialized = true
+        }
+    }
+
+    fun setupLiveDataForCreator(creator: Creator): LiveData<UiResult<ArrayList<Post>>> {
+        return if (_creatorContent.containsKey(creator)) {
+            _creatorContent[creator]!!
+        } else {
+            val creatorLiveData = MutableLiveData<UiResult<ArrayList<Post>>>()
+            _creatorContent[creator] = creatorLiveData
+            creatorContent[creator] = creatorLiveData
+            creatorLiveData
+        }
+    }
+
+    suspend fun listCreatorContent(
+        id: String,
+        sort: SortType? = null,
+        search: String? = null,
+        limit: Int = 10,
+        forceRefresh: Boolean = false
+    ) {
+        val creator = Creator(id)
+        var allCurrentContent = if (creatorContent[creator]?.value?.success.isNullOrEmpty()) {
+            ArrayList()
+        } else {
+            creatorContent[creator]?.value?.success!!
+        }
+
+        try {
+            val posts =
+                floatplaneRepository.handleResponse(
+                    floatplaneRepository.contentV3().creator(
+                        id = id,
+                        limit = limit,
+                        sort = sort,
+                        fetchAfter = allCurrentContent.size,
+                        search = search
+                    )
+                )
+
+            if (posts is Result.Success) {
+                //Set the creators that are subscribed
+                posts.data?.apply {
+                    if (forceRefresh) {
+                        allCurrentContent = posts.data.asList() as ArrayList<Post>
+                    } else {
+                        allCurrentContent.addAll(this)
+                    }
+                }
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                if (posts is Result.Success) {
+                    _creatorContent[creator]?.value =
+                        UiResult(success = allCurrentContent)
+                    contentLoaded = true
+                } else {
+                    _creatorContent[creator]?.value = UiResult(
+                        error = _errorHandler.handleResponseError(
+                            posts,
+                            R.string.bad_request,
+                            R.string.bad_token
+                        )
+                    )
+                }
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace() //Print the stack trace
+            CoroutineScope(Dispatchers.Main).launch {
+                _creatorContent[creator]?.value = UiResult(
+                    error = R.string.network_error
+                )
+            }
         }
     }
 

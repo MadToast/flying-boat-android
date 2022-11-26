@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="10dp">
+
+    <com.madtoast.flyingboat.ui.components.views.CircleImageView
+        android:id="@+id/headerLogo"
+        android:layout_width="@dimen/header_creator_logo_dimen"
+        android:layout_height="@dimen/header_creator_logo_dimen"
+        app:srcCompat="@drawable/logo_creator_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/headerDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/list_subheader_text_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="@string/latest_content_header" />
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/list_header_text_color"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            tools:text="Linus Tech Tips" />
+    </LinearLayout>
+
+</LinearLayout>

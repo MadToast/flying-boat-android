@@ -36,6 +36,9 @@ class MainActivity2 : AppCompatActivity() {
             ),
         )
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.toolbarTitle.text = destination.label
+        }
 
         navView?.setupWithNavController(navController)
 

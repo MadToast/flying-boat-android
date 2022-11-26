@@ -1,4 +1,4 @@
-package com.madtoast.flyingboat.ui.fragments.home
+package com.madtoast.flyingboat.ui.fragments.home.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

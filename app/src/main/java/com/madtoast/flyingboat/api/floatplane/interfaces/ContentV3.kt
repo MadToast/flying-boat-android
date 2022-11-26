@@ -17,26 +17,26 @@ interface ContentV3 {
     @GET(URI_BASE + URI_CREATOR)
     suspend fun creator(
         @Query("id") id: String,
-        @Query("limit") limit: Int,
-        @Query("fetchAfter") fetchAfter: Int,
-        @Query("search") search: String,
-        @Query("tags") tags: Array<String>,
-        @Query("hasVideo") hasVideo: Boolean,
-        @Query("hasAudio") hasAudio: Boolean,
-        @Query("hasPicture") hasPicture: Boolean,
-        @Query("hasText") hasText: Boolean,
-        @Query("sort") sort: SortType,
-        @Query("fromDuration") fromDuration: Int,
-        @Query("toDuration") toDuration: Int,
-        @Query("fromDate") fromDate: String,
-        @Query("toDate") toDate: String
-    ): Array<Post>?
+        @Query("limit") limit: Int = 10,
+        @Query("fetchAfter") fetchAfter: Int? = null,
+        @Query("search") search: String? = null,
+        @Query("tags") tags: Array<String>? = null,
+        @Query("hasVideo") hasVideo: Boolean? = null,
+        @Query("hasAudio") hasAudio: Boolean? = null,
+        @Query("hasPicture") hasPicture: Boolean? = null,
+        @Query("hasText") hasText: Boolean? = null,
+        @Query("sort") sort: SortType? = null,
+        @Query("fromDuration") fromDuration: Int? = null,
+        @Query("toDuration") toDuration: Int? = null,
+        @Query("fromDate") fromDate: String? = null,
+        @Query("toDate") toDate: String? = null
+    ): Response<Array<Post>?>
 
     @GET(URI_BASE + URI_CREATOR_LIST)
     suspend fun creatorList(
         @Query("ids") ids: Array<String>,
-        @Query("limit") limit: Int,
-        @Query("fetchAfter") fetchAfter: Array<LastElement>
+        @Query("limit") limit: Int? = null,
+        @Query("fetchAfter") fetchAfter: Array<LastElement>? = null
     ): Response<ContentListResponse?>
 
     @GET(URI_BASE + URI_TAGS)

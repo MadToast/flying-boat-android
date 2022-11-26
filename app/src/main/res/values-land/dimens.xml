@@ -2,4 +2,6 @@
     <dimen name="fab_margin">48dp</dimen>
     <dimen name="activity_horizontal_margin">48dp</dimen>
     <dimen name="login_card_margins">160dp</dimen>
+    <dimen name="fragment_padding_bottom">0dp</dimen>
+    <dimen name="fragment_padding_bottom_additional">0dp</dimen>
 </resources>
