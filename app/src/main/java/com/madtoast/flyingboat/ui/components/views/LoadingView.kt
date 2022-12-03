@@ -1,17 +1,18 @@
 package com.madtoast.flyingboat.ui.components.views
 
 import android.content.Context
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
 
-class LoadingView : LinearLayout {
-    private lateinit var loadingView: ProgressBar
+class LoadingView : FrameLayout {
+    private lateinit var loadingImage: ImageView
 
     constructor(context: Context) : super(context) {
         init()
@@ -32,7 +33,8 @@ class LoadingView : LinearLayout {
     private fun init() {
         val view = inflate(context, VIEW_TYPE, this);
 
-        loadingView = view.findViewById(R.id.loadingProgress)
+        loadingImage = view.findViewById(R.id.loadingImage)
+        (loadingImage.drawable as AnimatedVectorDrawable).start()
     }
 
 
@@ -43,7 +45,7 @@ class LoadingView : LinearLayout {
         }
 
         data.apply {
-            loadingView.visibility = if (showProgress) {
+            loadingImage.visibility = if (showProgress) {
                 View.VISIBLE
             } else {
                 View.GONE

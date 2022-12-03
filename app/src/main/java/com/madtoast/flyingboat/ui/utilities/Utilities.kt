@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Property
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowMetrics
 import android.view.animation.Animation
 import androidx.annotation.RequiresApi
@@ -16,42 +17,58 @@ import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.content.Image
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoUnit
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
+fun instantToLocalDateTime(instant: Instant): LocalDateTime {
+    val zone = ZoneId.systemDefault()
+    return LocalDateTime.ofInstant(instant, zone)
+}
 
 fun parseUserReadableDatePublished(context: Context, instant: Instant): String {
-    val now = Instant.now()
+    val now = LocalDateTime.now()
+    val then = instantToLocalDateTime(instant)
 
-    return when (val diff = ChronoUnit.SECONDS.between(instant, now)) {
-        in 0..60 -> context.resources.getQuantityString(R.plurals.secondsAgo, Math.toIntExact(diff))
-        in 60..3600 -> context.resources.getQuantityString(
-            R.plurals.minutesAgo, Math.toIntExact(
-                ChronoUnit.MINUTES.between(instant, now)
-            )
-        )
-        in 3600..86400 -> context.resources.getQuantityString(
-            R.plurals.hoursAgo, Math.toIntExact(
-                ChronoUnit.HOURS.between(instant, now)
-            )
-        )
-        in 86400..31560000 -> context.resources.getQuantityString(
-            R.plurals.monthsAgo, Math.toIntExact(
-                ChronoUnit.MONTHS.between(instant, now)
-            )
-        )
-        else -> context.resources.getQuantityString(
-            R.plurals.yearsAgo,
-            Math.toIntExact(ChronoUnit.YEARS.between(instant, now))
-        )
+    return when (val diff = ChronoUnit.SECONDS.between(then, now)) {
+        in 0..60 -> {
+            val seconds = Math.toIntExact(diff)
+            context.resources.getQuantityString(R.plurals.secondsAgo, seconds, seconds)
+        }
+        in 60..3600 -> {
+            val minutes = Math.toIntExact(ChronoUnit.MINUTES.between(then, now))
+
+            context.resources.getQuantityString(R.plurals.minutesAgo, minutes, minutes)
+        }
+        in 3600..86400 -> {
+            val hours = Math.toIntExact(ChronoUnit.HOURS.between(then, now))
+
+            context.resources.getQuantityString(R.plurals.hoursAgo, hours, hours)
+        }
+        in 86400..2678400 -> {
+            val days = Math.toIntExact(ChronoUnit.DAYS.between(then, now))
+
+            context.resources.getQuantityString(R.plurals.daysAgo, days, days)
+        }
+        in 2678400..31560000 -> {
+            val months = Math.toIntExact(ChronoUnit.MONTHS.between(then, now))
+
+            context.resources.getQuantityString(R.plurals.monthsAgo, months, months)
+        }
+        else -> {
+            val years = Math.toIntExact(ChronoUnit.YEARS.between(then, now))
+
+            context.resources.getQuantityString(R.plurals.yearsAgo, years, years)
+        }
     }
 }
 
 fun convertToDurationText(duration: Double): String {
-    val hours = floor(duration / 3600)
-    val minutes = floor((duration - (hours * 3600)) / 60)
-    val seconds = floor((duration - (hours * 3600) - (minutes * 60)))
+    val hours = floor(duration / 3600).toInt()
+    val minutes = floor((duration - (hours * 3600)) / 60).toInt()
+    val seconds = floor((duration - (hours * 3600) - (minutes * 60))).toInt()
 
     return (if (hours > 0) "${hours.toString().padStart(2, '0')}:" else "") +
             "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
@@ -193,7 +210,9 @@ fun View.withAnimatorByFloat(
     property: String,
     valueStart: Float,
     valueEnd: Float,
-    setStartValueNow: Boolean = false
+    setStartValueNow: Boolean = false,
+    valueListener: ((id: String, newValue: Float) -> Unit)? = null,
+    id: String? = null
 ): ObjectAnimator {
     val objectProperty = object : Property<View, Float>(Float::class.java, property) {
         override fun set(view: View, value: Float) {
@@ -208,6 +227,7 @@ fun View.withAnimatorByFloat(
                 }
                 "rotation" -> rotation = value
             }
+            valueListener?.invoke(id!!, value)
         }
 
         override fun get(view: View): Float {
@@ -310,12 +330,20 @@ fun calculateBrightness(bitmap: Bitmap, scale: Float): Int {
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
-fun RecyclerView.onScrolledListener(onScrolled: (recyclerView: RecyclerView) -> Unit) {
+fun RecyclerView.onScrolledListener(onScrolled: (recyclerView: RecyclerView, dx: Int, dy: Int) -> Unit) {
     this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            onScrolled.invoke(recyclerView)
+            onScrolled.invoke(recyclerView, dx, dy)
         }
     })
+}
+
+fun setViewMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
+    if (view.layoutParams is ViewGroup.MarginLayoutParams) {
+        (view.layoutParams as ViewGroup.MarginLayoutParams).setMargins(left, top, right, bottom)
+
+        view.requestLayout()
+    }
 }

@@ -18,9 +18,9 @@ import org.threeten.bp.Instant
 
 
 class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : ViewModel() {
-    private val _creatorContent: HashMap<Creator, MutableLiveData<UiResult<ArrayList<Post>>>> =
+    private val _creatorContent: HashMap<String, MutableLiveData<UiResult<ArrayList<Post>>>> =
         HashMap()
-    val creatorContent: HashMap<Creator, LiveData<UiResult<ArrayList<Post>>>> =
+    val creatorContent: HashMap<String, LiveData<UiResult<ArrayList<Post>>>> =
         HashMap() //Add Live Data for each creator
     private var contentLoaded = false
 
@@ -39,12 +39,12 @@ class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : Vi
     }
 
     fun setupLiveDataForCreator(creator: Creator): LiveData<UiResult<ArrayList<Post>>> {
-        return if (_creatorContent.containsKey(creator)) {
-            _creatorContent[creator]!!
+        return if (_creatorContent.containsKey(creator.id)) {
+            _creatorContent[creator.id]!!
         } else {
             val creatorLiveData = MutableLiveData<UiResult<ArrayList<Post>>>()
-            _creatorContent[creator] = creatorLiveData
-            creatorContent[creator] = creatorLiveData
+            _creatorContent[creator.id] = creatorLiveData
+            creatorContent[creator.id] = creatorLiveData as LiveData<UiResult<ArrayList<Post>>>
             creatorLiveData
         }
     }
@@ -56,11 +56,10 @@ class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : Vi
         limit: Int = 10,
         forceRefresh: Boolean = false
     ) {
-        val creator = Creator(id)
-        var allCurrentContent = if (creatorContent[creator]?.value?.success.isNullOrEmpty()) {
+        var allCurrentContent = if (creatorContent[id]?.value?.success.isNullOrEmpty()) {
             ArrayList()
         } else {
-            creatorContent[creator]?.value?.success!!
+            creatorContent[id]?.value?.success!!
         }
 
         try {
@@ -88,11 +87,11 @@ class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : Vi
 
             CoroutineScope(Dispatchers.Main).launch {
                 if (posts is Result.Success) {
-                    _creatorContent[creator]?.value =
+                    _creatorContent[id]?.value =
                         UiResult(success = allCurrentContent)
                     contentLoaded = true
                 } else {
-                    _creatorContent[creator]?.value = UiResult(
+                    _creatorContent[id]?.value = UiResult(
                         error = _errorHandler.handleResponseError(
                             posts,
                             R.string.bad_request,
@@ -104,7 +103,7 @@ class HomeViewModel(private val floatplaneRepository: FloatplaneRepository) : Vi
         } catch (e: Throwable) {
             e.printStackTrace() //Print the stack trace
             CoroutineScope(Dispatchers.Main).launch {
-                _creatorContent[creator]?.value = UiResult(
+                _creatorContent[id]?.value = UiResult(
                     error = R.string.network_error
                 )
             }

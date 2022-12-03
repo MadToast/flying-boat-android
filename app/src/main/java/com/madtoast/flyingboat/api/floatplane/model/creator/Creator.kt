@@ -5,9 +5,9 @@ import com.madtoast.flyingboat.api.floatplane.model.content.Image
 import com.madtoast.flyingboat.api.floatplane.model.content.LiveStream
 
 data class Creator(
-    val id: String? = null,
+    val id: String,
     val owner: Any? = null,
-    val title: String? = null,
+    val title: String = "",
     val urlname: String? = null,
     val description: String? = null,
     val discoverable: Boolean = false,
@@ -53,8 +53,26 @@ data class Creator(
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        var result = id.hashCode()
+        result = 31 * result + (owner?.hashCode() ?: 0)
+        result = 31 * result + (title.hashCode())
+        result = 31 * result + (urlname?.hashCode() ?: 0)
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + discoverable.hashCode()
+        result = 31 * result + (about?.hashCode() ?: 0)
+        result = 31 * result + (category?.hashCode() ?: 0)
+        result = 31 * result + (cover?.hashCode() ?: 0)
+        result = 31 * result + (icon?.hashCode() ?: 0)
+        result = 31 * result + (liveStream?.hashCode() ?: 0)
+        result = 31 * result + (subscriptionPlans?.contentHashCode() ?: 0)
+        result = 31 * result + (subscriberCountDisplay?.hashCode() ?: 0)
+        result = 31 * result + incomeDisplay.hashCode()
+        result = 31 * result + (socialLinks?.hashCode() ?: 0)
+        result = 31 * result + (createdAt?.hashCode() ?: 0)
+        result = 31 * result + userSubscribed.hashCode()
+        return result
     }
+
 
     class SubscribedComparator : Comparator<Creator> {
         override fun compare(o1: Creator?, o2: Creator?): Int {

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -36,6 +37,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.databinding.ActivityLoginBinding
 import com.madtoast.flyingboat.network.NetworkLiveData
@@ -44,8 +46,10 @@ import com.madtoast.flyingboat.ui.activities.ui.login.LoginViewModelFactory
 import com.madtoast.flyingboat.ui.utilities.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Float.max
+import kotlin.math.ceil
 import kotlin.random.Random
 
 
@@ -54,10 +58,13 @@ class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var loginViewModel: LoginViewModel
     lateinit var networkLiveData: NetworkLiveData
+    var creatorsDisplayed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+
+        AndroidThreeTen.init(this);
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
@@ -388,6 +395,8 @@ class LoginActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     loginViewModel.getAllPlatformCreators()
                 }
+            } else if (it && !creatorsDisplayed && loginViewModel.creatorsResult.value?.success != null) {
+                showCreatorsOnScreen(binding, loginViewModel.creatorsResult.value!!.success!!)
             }
         })
 
@@ -449,6 +458,7 @@ class LoginActivity : AppCompatActivity() {
         creators: Array<com.madtoast.flyingboat.api.floatplane.model.creator.Creator>
     ) {
         binding.creatorHolder.removeAllViews()
+        creatorsDisplayed = true
 
         var animationDelay = 0L
         for (creator in creators) {
@@ -481,7 +491,12 @@ class LoginActivity : AppCompatActivity() {
                                 dataSource: DataSource?,
                                 isFirstResource: Boolean
                             ): Boolean {
-                                createImageForCreator(binding, resource, currentAnimationDelay)
+                                createImageForCreator(
+                                    binding,
+                                    creator.id,
+                                    resource,
+                                    currentAnimationDelay
+                                )
                                 return true
                             }
                         })
@@ -494,72 +509,178 @@ class LoginActivity : AppCompatActivity() {
 
     private fun createImageForCreator(
         binding: ActivityLoginBinding,
+        creatorId: String,
         creatorLogo: Drawable?,
         animationDelay: Long
     ) {
         if (creatorLogo == null) {
             return
         }
-
-        //Get the drawable from resources
-        val creatorBalloon =
-            ResourcesCompat.getDrawable(resources, R.drawable.baloon_creator, null) as LayerDrawable
-        creatorBalloon.mutate()
-        creatorBalloon.setDrawableByLayerId(R.id.creatorLogo, creatorLogo)
-
-        // Setup the required values
-        val creatorBalloonView = ImageView(this)
-        val maxPositionY = binding.creatorHolder.height
-        val partsOfScreen = maxPositionY / 6
-        val drawableOffsetX = creatorBalloon.minimumWidth
-        val positionX = (binding.creatorHolder.width + drawableOffsetX).toFloat()
-        val positionY = (partsOfScreen * Random.nextInt(5)).toFloat()
-        val scale = getRandomScale()
-        val zIndex = getZIndexBasedOnScale(scale)
-
-        // Setup the view
-        creatorBalloonView.setImageDrawable(creatorBalloon)
-        creatorBalloonView.setColorFilter(
-            ResourcesCompat.getColor(
-                resources,
-                R.color.baloon_overlay,
-                null
+        // Post to creator holder to make sure layout is drawn and measured
+        binding.creatorHolder.post {
+            //Get the drawable from resources
+            creatorLogo.setTint(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.baloon_overlay,
+                    null
+                )
             )
-        )
-        creatorBalloonView.scaleY = scale
-        creatorBalloonView.scaleX = scale
-        creatorBalloonView.translationZ = zIndex
-        creatorBalloonView.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).also {
-            it.gravity = (Gravity.START or Gravity.TOP)
-        }
+            creatorLogo.setTintMode(PorterDuff.Mode.SRC_ATOP)
+            val creatorBalloon =
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.baloon_creator,
+                    null
+                ) as LayerDrawable
+            creatorBalloon.mutate()
+            creatorBalloon.setDrawableByLayerId(R.id.creatorLogo, creatorLogo)
 
+            // Setup the required values
+            val creatorBalloonView = ImageView(this)
 
-        // Setup the animation
-        val acrossScreenAnimation = TranslateAnimation(
-            positionX,
-            ((-creatorBalloon.minimumWidth) * 2).toFloat(), positionY, positionY
-        )
-        acrossScreenAnimation.duration = getDurationBasedOnPositionY(positionY, maxPositionY)
-        acrossScreenAnimation.interpolator = LinearInterpolator()
-        acrossScreenAnimation.repeatMode = Animation.RESTART
-        acrossScreenAnimation.repeatCount = Animation.INFINITE
-        acrossScreenAnimation.startOffset = animationDelay
+            //Show creators on top of screen if portrait to avoid creators being shown behind login screen
+            val maxPositionY =
+                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                    binding.creatorHolder.height / 2
+                else
+                    binding.creatorHolder.height
 
-        CoroutineScope(Dispatchers.Main).launch {
-            binding.creatorHolder.addView(creatorBalloonView)
-            creatorBalloonView.startAnimation(acrossScreenAnimation)
+            val partsOfScreen = (maxPositionY / 6)
+            val positionX = binding.creatorHolder.width.toFloat()
+            val positionY = (partsOfScreen * Random.nextInt(5)).toFloat()
+            val scale = getRandomScale()
+            val zIndex = getZIndexBasedOnScale(scale)
+
+            // Setup the view
+            creatorBalloonView.setImageDrawable(creatorBalloon)
+            creatorBalloonView.scaleY = scale
+            creatorBalloonView.scaleX = scale
+            creatorBalloonView.translationZ = zIndex
+            creatorBalloonView.layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).also {
+                it.gravity = (Gravity.START or Gravity.TOP)
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.creatorHolder.addView(creatorBalloonView)
+
+                // Setup the animation
+                with(
+                    creatorBalloonView.withAnimatorByFloat(
+                        "rotation",
+                        getRotationBasedOnPositionY(positionY, maxPositionY),
+                        3f,
+                        true
+                    )
+                ) {
+                    duration = 1400
+                    startDelay = 1000
+                    interpolator = AccelerateDecelerateInterpolator()
+                    repeatMode = ObjectAnimator.REVERSE
+                    repeatCount = ObjectAnimator.INFINITE
+                    start()
+                }
+                with(
+                    creatorBalloonView.withAnimatorByFloat(
+                        "translationY",
+                        positionY,
+                        positionY + 20,
+                        true,
+
+                        )
+                ) {
+                    duration = 1500
+                    interpolator = AccelerateDecelerateInterpolator()
+                    repeatMode = ObjectAnimator.REVERSE
+                    repeatCount = ObjectAnimator.INFINITE
+                    start()
+                }
+
+                if (loginViewModel.creatorsPositionsOnScreen.containsKey(creatorId) && loginViewModel.creatorsPositionsOnScreen[creatorId]!! > 0) {
+                    var updatedPositionX = loginViewModel.creatorsPositionsOnScreen[creatorId]!!
+                    if (loginViewModel.creatorsPreviousOrientation[creatorId] != resources.configuration.orientation) {
+                        updatedPositionX =
+                            (binding.creatorHolder.width * updatedPositionX) / binding.creatorHolder.height
+                    }
+
+                    with(
+                        creatorBalloonView.withAnimatorByFloat(
+                            "translationX",
+                            updatedPositionX,
+                            ((-creatorBalloon.minimumWidth) * 2).toFloat(),
+                            true,
+                            ::registerCreatorPositionOnScreen,
+                            creatorId
+                        )
+                    ) {
+                        duration =
+                            ceil((updatedPositionX * 60000L) / (positionX + ((creatorBalloon.minimumWidth) * 2))).toLong()
+                        interpolator = LinearInterpolator()
+                        doOnAnimatorEnd {
+                            startCreatorAnimation(
+                                creatorBalloonView,
+                                positionX,
+                                creatorBalloon.minimumWidth,
+                                creatorId
+                            )
+                        }
+                        start()
+                    }
+                } else {
+                    creatorBalloonView.translationX = positionX // Set the position before the delay
+                    delay(animationDelay)
+                    startCreatorAnimation(
+                        creatorBalloonView,
+                        positionX,
+                        creatorBalloon.minimumWidth,
+                        creatorId
+                    )
+                }
+
+                // Set the current orientation
+                loginViewModel.creatorsPreviousOrientation[creatorId] =
+                    resources.configuration.orientation
+            }
         }
     }
 
-    private fun getDurationBasedOnPositionY(position: Float, viewHeight: Int): Long {
-        val minDuration = 50000f
-        val maxDuration = 60000f
+    private fun startCreatorAnimation(
+        creatorBalloonView: View,
+        positionX: Float,
+        minimumWidth: Int,
+        creatorId: String
+    ) {
+        with(
+            creatorBalloonView.withAnimatorByFloat(
+                "translationX",
+                positionX,
+                ((-minimumWidth) * 2).toFloat(),
+                true,
+                ::registerCreatorPositionOnScreen,
+                creatorId
+            )
+        ) {
+            duration = 60000L
+            interpolator = LinearInterpolator()
+            repeatMode = android.animation.ObjectAnimator.RESTART
+            repeatCount = android.animation.ObjectAnimator.INFINITE
+            start()
+        }
+    }
+
+    private fun registerCreatorPositionOnScreen(creator: String, newValue: Float) {
+        loginViewModel.creatorsPositionsOnScreen[creator] = newValue
+    }
+
+    private fun getRotationBasedOnPositionY(position: Float, viewHeight: Int): Float {
+        val minRotation = 6f
+        val maxRotation = 11f
 
         // The bigger the position, the higher the speed
-        return (maxDuration - ((position * minDuration) / viewHeight)).toLong()
+        return minRotation - ((position * maxRotation) / viewHeight)
     }
 
     private fun getRandomScale(): Float {

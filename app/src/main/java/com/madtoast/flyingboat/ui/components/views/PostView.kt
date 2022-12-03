@@ -3,18 +3,16 @@ package com.madtoast.flyingboat.ui.components.views
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -22,7 +20,6 @@ import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.content.Post
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
-import com.madtoast.flyingboat.ui.components.adapters.BaseViewAdapter
 import com.madtoast.flyingboat.ui.utilities.convertToDurationText
 import com.madtoast.flyingboat.ui.utilities.parseUserReadableDatePublished
 import com.madtoast.flyingboat.ui.utilities.selectImageQuality
@@ -34,16 +31,28 @@ class PostView : FrameLayout {
     lateinit var thumbnailLoadingView: ProgressBar
     lateinit var thumbnailView: ImageView
     lateinit var creatorView: ImageView
+    lateinit var creatorMetadata: LinearLayout
     lateinit var postTitleView: TextView
     lateinit var postMetadata: ViewGroup // Contains the duration of the video
     lateinit var creatorTitleView: TextView
     lateinit var postSubmittedWhenView: TextView // Contains the mills of when this was posted
 
+    private val thumbnailPlaceholder: Drawable
+    private val creatorPlaceholder: Drawable
+
     constructor(context: Context) : super(context) {
+        thumbnailPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.placeholder_view_vector)!!
+        creatorPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.logo_creator_placeholder)!!
         init()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        thumbnailPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.placeholder_view_vector)!!
+        creatorPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.logo_creator_placeholder)!!
         init()
     }
 
@@ -52,6 +61,10 @@ class PostView : FrameLayout {
         attrs,
         defStyle
     ) {
+        thumbnailPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.placeholder_view_vector)!!
+        creatorPlaceholder =
+            AppCompatResources.getDrawable(context, R.drawable.logo_creator_placeholder)!!
         init()
     }
 
@@ -62,6 +75,7 @@ class PostView : FrameLayout {
         thumbnailLoadingView = view.findViewById(R.id.imageProgressBar)
         thumbnailView = view.findViewById(R.id.thumbnailImageView)
         creatorView = view.findViewById(R.id.creatorLogo)
+        creatorMetadata = view.findViewById(R.id.creatorMetadata)
         postTitleView = view.findViewById(R.id.postTitle)
         postMetadata = view.findViewById(R.id.postMetadata)
         creatorTitleView = view.findViewById(R.id.creatorName)
@@ -69,9 +83,15 @@ class PostView : FrameLayout {
     }
 
     private fun resetUiState() {
-        postMetadata.removeAllViews()
-        errorTextView.visibility = View.GONE
+        //Only wipe the previous metadata if really needed to avoid expensive operations while scrolling
+        postMetadata.visibility = ViewGroup.INVISIBLE
+        errorTextView.visibility = View.INVISIBLE
         thumbnailLoadingView.visibility = View.VISIBLE
+    }
+
+    private fun prepareMetadataForDisplay() {
+        postMetadata.removeAllViews()
+        postMetadata.visibility = VISIBLE
     }
 
     private fun setThumbnailFailed() {
@@ -88,14 +108,12 @@ class PostView : FrameLayout {
     }
 
     private fun setMinifiedView(minified: Boolean) {
-        creatorView.visibility = if (minified) {
-            GONE
-        } else {
-            VISIBLE
+        if (creatorMetadata.visibility == INVISIBLE && minified) {
+            return //We're minified already, no need to update layout params (expensive)
         }
 
-        creatorTitleView.visibility = if (minified) {
-            GONE
+        creatorMetadata.visibility = if (minified) {
+            INVISIBLE
         } else {
             VISIBLE
         }
@@ -121,10 +139,11 @@ class PostView : FrameLayout {
         // Clear any glide request (in case user is fast scrolling)
         clearAnyGlideRequest()
 
+        // Set the minified view if requested
         setMinifiedView(data.Minified)
 
         // Set a reference to the post data
-        data.Post?.apply {
+        data.Post.apply {
             // Load the data to set
             val thumbnailToLoad = selectImageQuality(context, thumbnail)
             val creatorLogoToLoad = selectImageQuality(context, creator?.icon)
@@ -136,7 +155,12 @@ class PostView : FrameLayout {
 
             // Setup the metadata visualization
             metadata?.apply {
+                var hasAnyMetadata = false
                 if (hasVideo) {
+                    //Wipe the post metadata view group since we found metadata
+                    prepareMetadataForDisplay()
+                    hasAnyMetadata = true
+
                     with(MetadataView(context)) {
                         setMetadataType(MetadataView.Companion.MetadataType.VIDEO)
                         setMetadataDetails(
@@ -150,6 +174,11 @@ class PostView : FrameLayout {
                 }
 
                 if (hasAudio) {
+                    if (!hasAnyMetadata) {
+                        //Wipe the post metadata view group since we found metadata
+                        prepareMetadataForDisplay()
+                        hasAnyMetadata = true
+                    }
                     with(MetadataView(context)) {
                         setMetadataType(MetadataView.Companion.MetadataType.AUDIO)
                         setMetadataDetails(
@@ -163,6 +192,11 @@ class PostView : FrameLayout {
                 }
 
                 if (hasPicture) {
+                    if (!hasAnyMetadata) {
+                        //Wipe the post metadata view group since we found metadata
+                        prepareMetadataForDisplay()
+                        hasAnyMetadata = true
+                    }
                     with(MetadataView(context)) {
                         setMetadataType(MetadataView.Companion.MetadataType.PICTURE)
                         setMetadataDetails(pictureCount.toString())
@@ -171,6 +205,10 @@ class PostView : FrameLayout {
                 }
 
                 if (hasGallery) {
+                    if (!hasAnyMetadata) {
+                        //Wipe the post metadata view group since we found metadata
+                        prepareMetadataForDisplay()
+                    }
                     with(MetadataView(context)) {
                         setMetadataType(MetadataView.Companion.MetadataType.GALLERY)
                         setMetadataDetails(galleryCount.toString())
@@ -180,44 +218,50 @@ class PostView : FrameLayout {
             }
 
             // Setup glide to load the thumbnail
-            Glide
-                .with(context)
-                .load(thumbnailToLoad)
-                .placeholder(R.drawable.placeholder_view_vector)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        p0: GlideException?,
-                        p1: Any?,
-                        p2: Target<Drawable>?,
-                        p3: Boolean
-                    ): Boolean {
-                        Log.e(BaseViewAdapter.TAG, "Thumbnail failed to load")
-                        setThumbnailFailed()
-                        return false
-                    }
+            if (thumbnailToLoad == null) {
+                thumbnailView.setImageDrawable(thumbnailPlaceholder)
+                thumbnailLoadingView.visibility = View.INVISIBLE
+            } else {
+                Glide
+                    .with(context)
+                    .load(thumbnailToLoad)
+                    .downsample(DownsampleStrategy.AT_MOST)
+                    .placeholder(thumbnailPlaceholder)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            p0: GlideException?,
+                            p1: Any?,
+                            p2: Target<Drawable>?,
+                            p3: Boolean
+                        ): Boolean {
+                            setThumbnailFailed()
+                            return false
+                        }
 
-                    override fun onResourceReady(
-                        p0: Drawable?,
-                        p1: Any?,
-                        p2: Target<Drawable>?,
-                        p3: DataSource?,
-                        p4: Boolean
-                    ): Boolean {
-                        Log.d(BaseViewAdapter.TAG, "Thumbnail Loaded Successfully")
-                        thumbnailLoadingView.visibility = View.GONE
-                        return false
-                    }
-                })
-                .into(thumbnailView);
+                        override fun onResourceReady(
+                            p0: Drawable?,
+                            p1: Any?,
+                            p2: Target<Drawable>?,
+                            p3: DataSource?,
+                            p4: Boolean
+                        ): Boolean {
+                            thumbnailLoadingView.visibility = View.INVISIBLE
+                            return false
+                        }
+                    })
+                    .into(thumbnailView);
+            }
 
-            // Setup glide to load the creator logo
-            Glide
-                .with(context)
-                .load(creatorLogoToLoad)
-                .placeholder(R.drawable.logo_creator_placeholder)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(creatorView);
+            // Setup glide to load the creator logo if not minified view
+            if (!data.Minified)
+                Glide
+                    .with(context)
+                    .load(creatorLogoToLoad)
+                    .downsample(DownsampleStrategy.AT_MOST)
+                    .placeholder(creatorPlaceholder)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(creatorView);
         }
     }
 
