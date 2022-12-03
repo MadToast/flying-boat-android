@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="400"
+    android:viewportHeight="400">
+
+    <group
+        android:name="cloud_1"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="10"
+        android:translateY="30">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_2"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="180"
+        android:translateY="100">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75C408.42,82.14 387.84,77.24 367.23,94.44 365.52,76.56 339.49,53.82 310.11,82.81 273.69,61.7 235.18,76.08 240.81,120.23c-48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_3"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="80"
+        android:translateY="180">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_4"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="200"
+        android:translateY="260">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 43.16,-51.49 11.78,-57.17 5.74,-9.19 -10.8,-34.5 -32.28,-21.29 1.8,-13.5 -16.93,-40.27 -50.19,-16.13 -30.62,-47.2 -82.38,-50.16 -83.85,25.99 -48.48,11.84 -32.16,75.01 -2.77,69.3z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_5"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="10"
+        android:translateY="320">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_6"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="350"
+        android:translateY="30">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_7"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="400"
+        android:translateY="100">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75C408.42,82.14 387.84,77.24 367.23,94.44 365.52,76.56 339.49,53.82 310.11,82.81 273.69,61.7 235.18,76.08 240.81,120.23c-48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_8"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="600"
+        android:translateY="180">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_9"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="450"
+        android:translateY="260">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 43.16,-51.49 11.78,-57.17 5.74,-9.19 -10.8,-34.5 -32.28,-21.29 1.8,-13.5 -16.93,-40.27 -50.19,-16.13 -30.62,-47.2 -82.38,-50.16 -83.85,25.99 -48.48,11.84 -32.16,75.01 -2.77,69.3z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="cloud_10"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        android:translateX="550"
+        android:translateY="320">
+        <path
+            android:pathData="m242.2,172.9 l157.31,-0.69c56.11,-0.2 39.35,-58.07 7.97,-63.75 1.78,-49.47 -34.61,-87.56 -97.36,-25.64 -36.42,-21.11 -74.93,-6.73 -69.3,37.42 -48.48,11.84 -28,58.37 1.39,52.67z"
+            android:strokeWidth="1.365"
+            android:fillColor="@color/cloud_color" />
+    </group>
+
+    <group
+        android:name="balloon"
+        android:pivotX="50"
+        android:pivotY="150"
+        android:scaleY="1"
+        android:scaleX="1.1"
+        android:translateY="40"
+        android:translateX="80"
+        android:rotation="9">
+        <path
+            android:pathData="M109.55,81.46m-71.86,0a71.86,71.86 0,1 1,143.71 0a71.86,71.86 0,1 1,-143.71 0"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_internal" />
+        <path
+            android:pathData="M38.07,86.83C46.96,132.39 65.67,151.01 85.89,190.97h44.68c19.01,-40.94 45.32,-62.37 50.34,-102.25z"
+            android:strokeWidth="0.264583">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:gradientRadius="140"
+                    android:startColor="@color/balloon_internal_flame"
+                    android:endColor="@color/balloon_colors_internal"
+                    android:centerY="240"
+                    android:centerX="100"></gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="m105.08,9.44c0,0 -21.79,15.05 -35.71,32.47 -9.15,11.46 -11.68,23.58 -13.69,34.39 -5.63,30.24 28.96,97.19 37.07,114.16 1.6,3.34 -6.87,0.21 -6.87,0.21 0,0 -20.35,-34.89 -32.59,-57.23C45.82,119.78 37.45,102.21 36.97,85.26 36.55,70.61 41.15,55.44 48.7,42.88 55.78,31.08 66.41,20.75 78.65,14.47 86.64,10.38 105.08,9.44 105.08,9.44Z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_stripes" />
+        <path
+            android:pathData="m114.43,9.4c0,0 21.79,15.05 35.71,32.47 9.15,11.46 11.68,23.58 13.69,34.39 5.63,30.24 -28.96,97.19 -37.07,114.16 -1.6,3.34 6.87,0.21 6.87,0.21 0,0 20.35,-34.89 32.59,-57.23 7.48,-13.65 15.85,-31.22 16.33,-48.17C182.96,70.57 178.37,55.41 170.82,42.84 163.73,31.04 153.1,20.71 140.86,14.44 132.88,10.35 114.43,9.4 114.43,9.4Z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_stripes" />
+        <path
+            android:pathData="m97.86,190.77 l6.29,0.32c0,0 -9.72,-41.57 -12.27,-62.73 -1.88,-15.64 -3.81,-31.54 -2.2,-47.2 2.07,-20.18 8.71,-39.69 15.1,-58.93 1.48,-4.45 5.35,-12.99 5.35,-12.99l-6.92,0.32c0,0 -9.07,13.48 -12.27,20.91 -5.49,12.72 -7.8,26.6 -11.64,39.92 -4.09,14.18 -4.2,27.43 -3.46,41.19 0.86,16.01 4.59,31.84 9.12,47.2 3.26,11.03 12.9,32 12.9,32z"
+            android:strokeWidth="0.265503"
+            android:fillColor="@color/balloon_colors_stripes" />
+        <path
+            android:pathData="m121.78,190.49 l-6.32,0.07c0,0 9.72,-41.43 12.27,-62.51 1.88,-15.58 3.81,-31.43 2.2,-47.04 -2.07,-20.11 -8.71,-39.55 -15.1,-58.72C113.35,17.85 109.48,9.34 109.48,9.34l6.92,0.32c0,0 9.07,13.44 12.27,20.84 5.49,12.68 7.8,26.51 11.64,39.78 4.09,14.13 4.2,27.33 3.46,41.04 -0.86,15.95 -4.59,31.73 -9.12,47.04 -3.26,11 -12.87,32.14 -12.87,32.14z"
+            android:strokeWidth="0.265044"
+            android:fillColor="@color/balloon_colors_stripes" />
+        <path
+            android:pathData="m81.65,190.88c-1.63,0.02 -1.63,4.87 0,4.89 16.96,0.2 32.48,-0.27 52.93,-0.32 1.6,-0 1.52,-4.76 -0.08,-4.8 -20.48,-0.43 -35.53,-0.03 -52.85,0.22z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_bottom_stripe" />
+        <path
+            android:pathData="M86.53,249.9L131.15,249.9A7.01,7.01 0,0 1,138.16 256.9L138.16,277.52A7.01,7.01 0,0 1,131.15 284.53L86.53,284.53A7.01,7.01 0,0 1,79.53 277.52L79.53,256.9A7.01,7.01 0,0 1,86.53 249.9z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_basket_body" />
+        <path
+            android:pathData="M82.82,246.91L135.1,246.91A6.01,6.01 0,0 1,141.1 252.92L141.1,252.92A6.01,6.01 0,0 1,135.1 258.92L82.82,258.92A6.01,6.01 0,0 1,76.81 252.92L76.81,252.92A6.01,6.01 0,0 1,82.82 246.91z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_basket_top" />
+        <path
+            android:pathData="m89.93,195.77 l4.84,15.02 28.14,0.17 4.39,-15.46 -1.17,0.06 -4,14.02c-2.87,-0.03 -5.1,-0.06 -8.23,-0.06v-2.89h-9.68v2.56h-8.35l-4.78,-13.24z"
+            android:strokeWidth="0.617"
+            android:fillColor="#000000" />
+
+        <group
+            android:name="balloon_flame"
+            android:pivotY="205"
+            android:pivotX="110">
+            <path
+                android:pathData="m104.85,206.61c0,0 0.47,-2.93 1.92,-3.49 1.42,-0.55 2.21,-4 2.21,-4 0.38,1.33 1.19,3.54 2.24,4.02 1.23,0.49 1.93,3.47 1.93,3.47z"
+                android:strokeWidth="0.617"
+                android:fillColor="#aa0000" />
+            <path
+                android:pathData="m106.36,206.61c0,0 0.29,-1.83 1.2,-2.18 0.89,-0.34 1.38,-2.5 1.38,-2.5 0.24,0.83 0.74,2.21 1.4,2.51 0.77,0.3 1.21,2.17 1.21,2.17z"
+                android:strokeWidth="0.385418"
+                android:fillColor="#ff9955" />
+            <path
+                android:pathData="m107.48,206.61c0,0 0.17,-1.06 0.7,-1.27 0.52,-0.2 0.8,-1.45 0.8,-1.45 0.14,0.48 0.43,1.29 0.81,1.46 0.45,0.18 0.7,1.26 0.7,1.26z"
+                android:strokeWidth="0.224137"
+                android:fillColor="#ffcc00" />
+        </group>
+
+        <path
+            android:pathData="m89.99,195.88 l-7.23,51.06 1.56,0.11 6.9,-51.06z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_internal" />
+        <path
+            android:pathData="m106.49,195.16 l-0.19,51.96 1.56,-0.1 -0.14,-51.91z"
+            android:strokeWidth="0.265587"
+            android:fillColor="@color/balloon_colors_internal" />
+        <path
+            android:pathData="m127.36,195.55 l7.23,51.06 -1.56,0.11 -6.9,-51.06z"
+            android:strokeWidth="0.264583"
+            android:fillColor="@color/balloon_colors_internal" />
+    </group>
+</vector>

@@ -25,6 +25,9 @@ class LoginViewModel(private val floatplaneRepository: FloatplaneRepository) : V
     private val _creatorsResult = MutableLiveData<UiResult<Array<Creator>>>()
     val creatorsResult: LiveData<UiResult<Array<Creator>>> = _creatorsResult
 
+    val creatorsPositionsOnScreen = HashMap<String, Float>()
+    val creatorsPreviousOrientation = HashMap<String, Int>()
+
     var isFirstTimeLaunch = true
     var creatorsLoaded = false
 

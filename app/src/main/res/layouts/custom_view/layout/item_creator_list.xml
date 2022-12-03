@@ -13,14 +13,16 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constrainedWidth="true">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/creatorCoverView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginBottom="60dp"
                 android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,16:8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,9 +53,9 @@
                 android:background="@drawable/gradient_black_transparent"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/creatorCoverView"
-                app:layout_constraintDimensionRatio="H,16:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/linearLayout2">
 
             </FrameLayout>
 
@@ -63,21 +65,21 @@
                 android:layout_width="@dimen/image_loading_size"
                 android:layout_height="@dimen/image_loading_size"
                 android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/creatorCoverView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-25dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/creatorCoverView">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.madtoast.flyingboat.ui.components.views.CircleImageView
                     android:id="@+id/creatorLogo"

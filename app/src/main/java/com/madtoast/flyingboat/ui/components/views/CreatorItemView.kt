@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -115,6 +116,7 @@ class CreatorItemView : FrameLayout {
             Glide
                 .with(context)
                 .load(thumbnailToLoad)
+                .downsample(DownsampleStrategy.AT_MOST)
                 .placeholder(R.drawable.placeholder_view_vector)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(object : RequestListener<Drawable> {
@@ -150,6 +152,7 @@ class CreatorItemView : FrameLayout {
             Glide
                 .with(context)
                 .load(creatorLogoToLoad)
+                .centerCrop()
                 .placeholder(R.drawable.logo_creator_placeholder)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(creatorLogoView);

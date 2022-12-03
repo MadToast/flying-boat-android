@@ -28,7 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CreatorProfileFragment(itemView: View) : Fragment() {
+class CreatorProfileFragment() : Fragment() {
 
     companion object {
         const val LIMIT: Int = 20

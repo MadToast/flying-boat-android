@@ -1,11 +1,13 @@
 package com.madtoast.flyingboat.ui.fragments.creators
 
 import android.content.res.Configuration
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -83,6 +85,7 @@ class CreatorsFragment : Fragment() {
 
         //Fetch the required data
         CoroutineScope(Dispatchers.IO).launch {
+            showLoading()
             _creatorsViewModel.listPlatformCreators(
                 "",
                 false,
@@ -91,6 +94,15 @@ class CreatorsFragment : Fragment() {
         }
 
         return _binding.root
+    }
+
+    private fun showLoading() {
+        _binding.loadingView.visibility = ImageView.VISIBLE
+        (_binding.loadingView.drawable as AnimatedVectorDrawable).start()
+    }
+
+    private fun hideLoading() {
+        _binding.loadingView.visibility = ImageView.GONE
     }
 
     private fun setupRecyclerView() {
@@ -122,6 +134,7 @@ class CreatorsFragment : Fragment() {
 
     private fun setupObservers() {
         _creatorsViewModel.creatorsResult.observe(viewLifecycleOwner, Observer {
+            hideLoading()
             val creatorResult = it ?: return@Observer
             if (creatorResult.success != null) {
                 showCreatorsOnScreen(creatorResult.success)

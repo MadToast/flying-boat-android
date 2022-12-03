@@ -12,7 +12,9 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome! Here's your content for today"</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="content_for_today">Here\'s your subscribed content from your trusty creators!</string>
+    <string name="discover_content_today">Why not try something new? It\'s always great to discover new content and learn more!</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be more than 5 characters</string>
     <string name="invalid_token">Token must be more than 5 characters</string>

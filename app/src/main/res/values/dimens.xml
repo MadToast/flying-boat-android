@@ -15,6 +15,8 @@
     <dimen name="image_loading_size">60dp</dimen>
     <dimen name="metadata_icon_size">20dp</dimen>
     <dimen name="metadata_text_size">11sp</dimen>
+    <dimen name="welcome_text">26sp</dimen>
+    <dimen name="subheader_text">18sp</dimen>
     <dimen name="metadata_padding_sides">5dp</dimen>
     <dimen name="login_title_margin">60dp</dimen>
     <dimen name="login_card_margins">40dp</dimen>

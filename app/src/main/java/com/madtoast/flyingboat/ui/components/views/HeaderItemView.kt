@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
@@ -62,6 +63,7 @@ class HeaderItemView : LinearLayout {
                 Glide
                     .with(context)
                     .load(logoSource)
+                    .downsample(DownsampleStrategy.AT_MOST)
                     .placeholder(R.drawable.logo_creator_placeholder)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(headerLogo);

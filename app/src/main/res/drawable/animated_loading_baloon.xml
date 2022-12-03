@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/image_loading_balloon">
+    <target android:name="balloon_flame">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="200"
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.2"
+                    android:valueTo="1.0"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+                <objectAnimator
+                    android:duration="200"
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.4"
+                    android:valueTo="1.0"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="balloon">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="1500"
+                    android:propertyName="translateY"
+                    android:valueFrom="40"
+                    android:valueTo="60"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:duration="1500"
+                    android:propertyName="rotation"
+                    android:valueFrom="9"
+                    android:valueTo="6"
+                    android:startOffset="750"
+                    android:repeatMode="reverse"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_1">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="10"
+                    android:valueTo="-390"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_2">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="180"
+                    android:valueTo="-220"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_3">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="80"
+                    android:valueTo="-320"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_4">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="200"
+                    android:valueTo="-200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_5">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="10"
+                    android:valueTo="-390"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_6">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="410"
+                    android:valueTo="10"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_7">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="580"
+                    android:valueTo="180"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_8">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="480"
+                    android:valueTo="80"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_9">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="600"
+                    android:valueTo="200"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cloud_10">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="6000"
+                    android:propertyName="translateX"
+                    android:valueFrom="410"
+                    android:valueTo="10"
+                    android:repeatMode="restart"
+                    android:repeatCount="infinite"
+                    android:interpolator="@android:anim/linear_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -2,6 +2,7 @@ package com.madtoast.flyingboat.ui.components.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,12 @@ class TextItemView : LinearLayout {
 
         data.apply {
             titleTextView.text = label
+            data.textStyle?.apply {
+                titleTextView.setTypeface(null, this)
+            }
+            data.textSize?.apply {
+                titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, this)
+            }
         }
     }
 
@@ -67,7 +74,9 @@ class TextItemView : LinearLayout {
         }
 
         class TextItem(
-            val label: String?
+            val label: String?,
+            val textSize: Float? = null,
+            val textStyle: Int? = null
         ) : BaseItem {
             override fun getItemType(): Int {
                 return VIEW_TYPE
