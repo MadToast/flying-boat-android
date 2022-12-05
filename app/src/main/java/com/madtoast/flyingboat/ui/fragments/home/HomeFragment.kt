@@ -3,6 +3,7 @@ package com.madtoast.flyingboat.ui.fragments.home
 import android.graphics.Typeface
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updatePaddingRelative
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +23,10 @@ import com.madtoast.flyingboat.api.floatplane.model.creator.Creator
 import com.madtoast.flyingboat.databinding.FragmentHomeBinding
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
 import com.madtoast.flyingboat.ui.components.adapters.BaseViewAdapter
-import com.madtoast.flyingboat.ui.components.views.*
+import com.madtoast.flyingboat.ui.components.views.HeaderItemView
+import com.madtoast.flyingboat.ui.components.views.NestedRecyclerView
+import com.madtoast.flyingboat.ui.components.views.PostView
+import com.madtoast.flyingboat.ui.components.views.TextItemView
 import com.madtoast.flyingboat.ui.fragments.home.viewmodels.HomeViewModel
 import com.madtoast.flyingboat.ui.fragments.home.viewmodels.HomeViewModelFactory
 import com.madtoast.flyingboat.ui.utilities.selectImageQuality
@@ -30,6 +34,7 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -37,6 +42,7 @@ class HomeFragment : Fragment() {
     private lateinit var _homeViewModel: HomeViewModel
     private lateinit var _binding: FragmentHomeBinding
     private var _bottomPadding = 0
+    private var _startPadding = 0
     private var _viewInsetsApplied = false
 
     override fun onCreateView(
@@ -62,13 +68,32 @@ class HomeFragment : Fragment() {
                     resources.getDimensionPixelSize(R.dimen.fragment_padding_bottom)
                 val bottomAdditionalPadding =
                     resources.getDimensionPixelSize(R.dimen.fragment_padding_bottom_additional)
+                val startNavigationHeight =
+                    resources.getDimensionPixelSize(R.dimen.fragment_padding_start)
+                val startAdditionalPadding =
+                    resources.getDimensionPixelSize(R.dimen.fragment_padding_start_additional)
                 //Calculate top and bottom padding to take status bar and navigation bar into account
                 val windowInsets =
                     ViewCompat.getRootWindowInsets(requireActivity().window.decorView)
                 val systemBarsInsets = windowInsets?.getInsets(WindowInsetsCompat.Type.systemBars())
                 systemBarsInsets?.top?.let {
-                    _binding.homeList.updatePadding(top = actionBarHeight + it)
+                    _binding.homeList.updatePaddingRelative(top = actionBarHeight + it)
                 }
+                // Apply the left padding to recycler views
+                var paddingStart = 0
+                if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR) {
+                    systemBarsInsets?.left?.let {
+                        paddingStart = it
+                    }
+                }
+                if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) != View.LAYOUT_DIRECTION_LTR) {
+                    systemBarsInsets?.right?.let {
+                        paddingStart = it
+                    }
+                }
+                _startPadding = startNavigationHeight + startAdditionalPadding + paddingStart
+                updateStartPadding()
+
                 systemBarsInsets?.bottom?.let {
                     _bottomPadding = bottomNavigationHeight + bottomAdditionalPadding + it
                     updateBottomPadding()
@@ -109,42 +134,48 @@ class HomeFragment : Fragment() {
         val homeList: RecyclerView = _binding.homeList
         val homeItemsList = ArrayList<BaseItem>()
         val homeAdapter = homeList.adapter as BaseViewAdapter
+
+        val headerItem = TextItemView.Companion.TextItem(
+            getString(R.string.welcome),
+            resources.getDimension(R.dimen.welcome_text),
+            Typeface.BOLD
+        )
+        headerItem.setItemPadding(_startPadding, 0, 0, 0)
         homeItemsList.add(
-            TextItemView.Companion.TextItem(
-                getString(R.string.welcome),
-                resources.getDimension(R.dimen.welcome_text),
-                Typeface.BOLD
-            )
+            headerItem
         )
 
         var hasAddedSubHeaderForSubscribed = false
         var hasAddedSubHeaderForUnsubscribed = false
         for (creator in creators) {
             if (creator.userSubscribed && !hasAddedSubHeaderForSubscribed) {
-                homeItemsList.add(
-                    TextItemView.Companion.TextItem(
-                        getString(R.string.content_for_today),
-                        resources.getDimension(R.dimen.subheader_text)
-                    )
+                val header = TextItemView.Companion.TextItem(
+                    getString(R.string.content_for_today),
+                    resources.getDimension(R.dimen.subheader_text)
                 )
+                header.setItemPadding(_startPadding, 0, 0, 0)
+                homeItemsList.add(header)
                 hasAddedSubHeaderForSubscribed = true
             }
             if (!creator.userSubscribed && !hasAddedSubHeaderForUnsubscribed) {
-                homeItemsList.add(
-                    TextItemView.Companion.TextItem(
-                        getString(R.string.discover_content_today),
-                        resources.getDimension(R.dimen.subheader_text)
-                    )
+                val header = TextItemView.Companion.TextItem(
+                    getString(R.string.discover_content_today),
+                    resources.getDimension(R.dimen.subheader_text)
                 )
+                header.setItemPadding(_startPadding, 0, 0, 0)
+                homeItemsList.add(header)
                 hasAddedSubHeaderForUnsubscribed = true
             }
             //Generate Header
-            homeItemsList.add(generateHeaderForCreator(creator))
+            val header = generateHeaderForCreator(creator)
+            header.setItemPadding(_startPadding, 0, 0, 0)
+            homeItemsList.add(header)
 
             //Generate Nested List
-            homeItemsList.add(generateNestedRecyclerForCreator(creator))
+            val list = generateNestedRecyclerForCreator(creator)
+            list.setItemPadding(_startPadding, 0, 0, 0)
+            homeItemsList.add(list)
         }
-        homeItemsList.add(BlankView.Companion.BlankViewItem(_bottomPadding))
         homeAdapter.updateDataSet(homeItemsList)
         updateBottomPadding()
 
@@ -273,15 +304,23 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateBottomPadding() {
+        // Set the margin of the last item as the padding on the recyclerview won't work correctly.
         val homeList: RecyclerView = _binding.homeList
         val homeAdapter = homeList.adapter as BaseViewAdapter?
         if (homeAdapter != null && homeAdapter.itemCount > 0) {
-            if (homeAdapter.getItemAt(homeAdapter.itemCount - 1) is BlankView.Companion.BlankViewItem) {
-                (homeAdapter.getItemAt(homeAdapter.itemCount - 1) as BlankView.Companion.BlankViewItem).height =
-                    _bottomPadding
-                homeAdapter.notifyItemChanged(homeAdapter.itemCount - 1)
-            } else {
-                homeAdapter.addItem(BlankView.Companion.BlankViewItem(_bottomPadding))
+            homeAdapter.getItemAt(homeAdapter.itemCount - 1).bottomMargins = _bottomPadding
+            homeAdapter.notifyItemChanged(homeAdapter.itemCount - 1)
+        }
+    }
+
+    private fun updateStartPadding() {
+        // Set the margin of the last item as the padding on the recyclerview won't work correctly.
+        val homeList: RecyclerView = _binding.homeList
+        val homeAdapter = homeList.adapter as BaseViewAdapter?
+        if (homeAdapter != null && homeAdapter.itemCount > 0) {
+            for ((index, item) in homeAdapter.getItemSet().withIndex()) {
+                item.startPadding = _startPadding
+                homeAdapter.notifyItemChanged(index)
             }
         }
     }

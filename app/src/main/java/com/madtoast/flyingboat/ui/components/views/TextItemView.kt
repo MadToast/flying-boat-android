@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
@@ -58,18 +59,31 @@ class TextItemView : LinearLayout {
 
         class TextItemViewHolder(view: TextItemView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val textItemView: TextItemView
+            private val holderView: TextItemView
 
             init {
-                textItemView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
-                textItemView.setDataToView(data)
+                holderView.setDataToView(data)
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                textItemView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
         }
 
@@ -77,7 +91,7 @@ class TextItemView : LinearLayout {
             val label: String?,
             val textSize: Float? = null,
             val textStyle: Int? = null
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.Space
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
@@ -39,24 +40,37 @@ class BlankView : LinearLayout {
 
         class BlankViewHolder(view: BlankView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val blankView: BlankView
+            private val holderView: BlankView
 
             init {
-                blankView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
-                blankView.setDataToView(data)
+                holderView.setDataToView(data)
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                blankView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
         }
 
         class BlankViewItem(
             var height: Int,
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

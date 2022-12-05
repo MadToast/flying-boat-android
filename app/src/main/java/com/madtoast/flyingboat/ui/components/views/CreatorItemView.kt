@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -164,10 +165,10 @@ class CreatorItemView : FrameLayout {
 
         class CreatorItemViewHolder(view: CreatorItemView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val creatorView: CreatorItemView
+            private val holderView: CreatorItemView
 
             init {
-                creatorView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
@@ -176,17 +177,30 @@ class CreatorItemView : FrameLayout {
                     throw NotImplementedError("Data assigned is not the correct type! Correct type is ${CreatorItem::class.simpleName}")
                 }
 
-                creatorView.setDataToView(data)
+                holderView.setDataToView(data)
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                creatorView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
         }
 
         class CreatorItem(
             val Creator: Creator?
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

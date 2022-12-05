@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updatePaddingRelative
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.utilities.setViewMargins
 
@@ -67,7 +67,7 @@ class MetadataView : LinearLayout {
             0
         )
 
-        updatePadding(
+        updatePaddingRelative(
             resources.getDimensionPixelSize(R.dimen.metadata_padding_sides),
             0,
             resources.getDimensionPixelSize(R.dimen.metadata_padding_sides),

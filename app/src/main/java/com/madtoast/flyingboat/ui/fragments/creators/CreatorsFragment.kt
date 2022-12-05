@@ -3,6 +3,7 @@ package com.madtoast.flyingboat.ui.fragments.creators
 import android.content.res.Configuration
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updatePaddingRelative
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,12 +31,14 @@ import com.madtoast.flyingboat.ui.fragments.creators.viewmodels.CreatorsViewMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class CreatorsFragment : Fragment() {
 
     private lateinit var _creatorsViewModel: CreatorsViewModel
     private lateinit var _binding: FragmentCreatorsBinding
     private var _bottomPadding = 0
+    private var _startPadding = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,13 +62,32 @@ class CreatorsFragment : Fragment() {
                     resources.getDimensionPixelSize(R.dimen.fragment_padding_bottom)
                 val bottomAdditionalPadding =
                     resources.getDimensionPixelSize(R.dimen.fragment_padding_bottom_additional)
+                val startNavigationHeight =
+                    resources.getDimensionPixelSize(R.dimen.fragment_padding_start)
+                val startAdditionalPadding =
+                    resources.getDimensionPixelSize(R.dimen.fragment_padding_start_additional)
                 //Calculate top and bottom padding to take status bar and navigation bar into account
                 val windowInsets =
                     ViewCompat.getRootWindowInsets(requireActivity().window.decorView)
                 val systemBarsInsets = windowInsets?.getInsets(WindowInsetsCompat.Type.systemBars())
                 systemBarsInsets?.top?.let {
-                    _binding.creatorList.updatePadding(top = actionBarHeight + it)
+                    _binding.creatorList.updatePaddingRelative(top = actionBarHeight + it)
                 }
+                // Apply the left padding to recycler views
+                var paddingStart = 0
+                if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR) {
+                    systemBarsInsets?.left?.let {
+                        paddingStart = it
+                    }
+                }
+                if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) != View.LAYOUT_DIRECTION_LTR) {
+                    systemBarsInsets?.right?.let {
+                        paddingStart = it
+                    }
+                }
+                _startPadding = startNavigationHeight + startAdditionalPadding + paddingStart
+                _binding.creatorList.updatePaddingRelative(start = _startPadding)
+
                 systemBarsInsets?.bottom?.let {
                     _bottomPadding = bottomNavigationHeight + bottomAdditionalPadding + it
                     updateBottomPadding()

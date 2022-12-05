@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -269,10 +270,10 @@ class PostView : FrameLayout {
         const val VIEW_TYPE = R.layout.post_item_view
 
         class PostViewHolder(view: PostView) : RecyclerView.ViewHolder(view), BaseAdapterHolder {
-            private val postView: PostView
+            private val holderView: PostView
 
             init {
-                postView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
@@ -281,18 +282,31 @@ class PostView : FrameLayout {
                     throw NotImplementedError("Data assigned is not the correct type! Correct type is ${PostView::class.simpleName}")
                 }
 
-                postView.setDataToView(data)
+                holderView.setDataToView(data)
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                postView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
             }
         }
 
         class PostItem(
             val Post: Post,
             val Minified: Boolean = false
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

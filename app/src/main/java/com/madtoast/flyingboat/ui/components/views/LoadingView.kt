@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
@@ -58,24 +59,37 @@ class LoadingView : FrameLayout {
 
         class LoadingViewHolder(view: LoadingView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val loadingView: LoadingView
+            private val holderView: LoadingView
 
             init {
-                loadingView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
-                loadingView.setDataToView(data)
+                holderView.setDataToView(data)
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                loadingView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
         }
 
         class LoadingItem(
             val showProgress: Boolean
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

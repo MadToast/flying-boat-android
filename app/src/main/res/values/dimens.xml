@@ -24,5 +24,7 @@
     <dimen name="plane_size">180dp</dimen>
     <dimen name="fragment_padding_bottom">@dimen/design_bottom_navigation_height</dimen>
     <dimen name="fragment_padding_bottom_additional">15dp</dimen>
+    <dimen name="fragment_padding_start">0dp</dimen>
+    <dimen name="fragment_padding_start_additional">0dp</dimen>
     <dimen name="post_item_minified">250dp</dimen>
 </resources>

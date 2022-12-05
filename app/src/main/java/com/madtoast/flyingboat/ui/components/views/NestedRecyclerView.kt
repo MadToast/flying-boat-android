@@ -3,6 +3,7 @@ package com.madtoast.flyingboat.ui.components.views
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
@@ -43,6 +44,7 @@ class NestedRecyclerView : FrameLayout {
         nestedRecycler.itemAnimator = SlideInUpAnimator()
         nestedRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         nestedRecycler.setItemViewCacheSize(20)
+        nestedRecycler.clipToPadding = false
     }
 
     fun setDataToView(data: NestedRecyclerItem) {
@@ -93,10 +95,10 @@ class NestedRecyclerView : FrameLayout {
 
         class NestedRecyclerViewHolder(view: NestedRecyclerView) : RecyclerView.ViewHolder(view),
             BaseAdapterHolder {
-            private val nestedRecyclerView: NestedRecyclerView
+            private val holderView: NestedRecyclerView
 
             init {
-                nestedRecyclerView = view
+                holderView = view
             }
 
             override fun setDataToView(data: Any) {
@@ -105,15 +107,28 @@ class NestedRecyclerView : FrameLayout {
                     throw NotImplementedError("Data assigned is not the correct type! Correct type is ${NestedRecyclerItem::class.simpleName}")
                 }
 
-                nestedRecyclerView.setDataToView(data)
+                holderView.setDataToView(data)
+            }
+
+            override fun setLayoutPadding(start: Int, top: Int, end: Int, bottom: Int) {
+                holderView.nestedRecycler.updatePaddingRelative(start, top, end, bottom)
+            }
+
+            override fun setLayoutMargins(start: Int, top: Int, end: Int, bottom: Int) {
+                val layoutParams = (holderView.layoutParams as MarginLayoutParams)
+                layoutParams.marginStart = start
+                layoutParams.topMargin = start
+                layoutParams.marginEnd = start
+                layoutParams.bottomMargin = start
+                holderView.layoutParams = layoutParams
             }
 
             override fun setLayoutParamsToView(layoutParams: RecyclerView.LayoutParams) {
-                nestedRecyclerView.layoutParams = layoutParams
+                holderView.layoutParams = layoutParams
             }
 
             fun setRecycledPool(recycledViewPool: RecycledViewPool) {
-                nestedRecyclerView.nestedRecycler.setRecycledViewPool(recycledViewPool)
+                holderView.nestedRecycler.setRecycledViewPool(recycledViewPool)
             }
         }
 
@@ -126,7 +141,7 @@ class NestedRecyclerView : FrameLayout {
             var InfiniteScrollable: Boolean = false,
             var currentVisiblePosition: Int = 0,
             var currentVisibleOffset: Int = 0,
-        ) : BaseItem {
+        ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE
             }

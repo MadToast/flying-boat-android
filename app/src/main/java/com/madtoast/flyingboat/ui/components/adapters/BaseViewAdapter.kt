@@ -66,6 +66,18 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         (viewHolder as BaseAdapterHolder).setDataToView(dataSet[position])
+        (viewHolder as BaseAdapterHolder).setLayoutMargins(
+            dataSet[position].startMargins,
+            dataSet[position].topMargins,
+            dataSet[position].endMargins,
+            dataSet[position].bottomMargins
+        )
+        (viewHolder as BaseAdapterHolder).setLayoutPadding(
+            dataSet[position].startPadding,
+            dataSet[position].topPadding,
+            dataSet[position].endPadding,
+            dataSet[position].bottomPadding
+        )
     }
 
     // Return the size of your dataset (invoked by the layout manager)

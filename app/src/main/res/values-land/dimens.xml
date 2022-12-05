@@ -4,4 +4,6 @@
     <dimen name="login_card_margins">160dp</dimen>
     <dimen name="fragment_padding_bottom">0dp</dimen>
     <dimen name="fragment_padding_bottom_additional">0dp</dimen>
+    <dimen name="fragment_padding_start">@dimen/design_bottom_navigation_height</dimen>
+    <dimen name="fragment_padding_start_additional">25dp</dimen>
 </resources>
