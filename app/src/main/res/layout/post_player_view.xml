@@ -26,17 +26,22 @@
 
     <FrameLayout
         android:id="@+id/controlsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/videoTexture"
         app:layout_constraintEnd_toEndOf="@id/videoTexture"
         app:layout_constraintStart_toStartOf="@id/videoTexture"
         app:layout_constraintTop_toTopOf="@id/videoTexture">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"></LinearLayout>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="detailsView"
+        android:id="@+id/detailsView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
