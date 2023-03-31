@@ -22,6 +22,8 @@
         android:id="@+id/stars_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="-100dp"
+        android:layout_marginBottom="-50dp"
         android:alpha="0.4"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,9 +63,9 @@
         android:layout_height="250dp"
         android:layout_marginStart="-100dp"
         android:layout_marginEnd="-500dp"
-        android:layout_marginBottom="-60dp"
+        android:layout_marginBottom="-100dp"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/login_card_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/animated_clouds_background" />
@@ -71,171 +73,157 @@
     <FrameLayout
         android:id="@+id/login_card_container"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="350dp"
         android:layout_weight="1"
+        android:background="@color/card_login"
+        android:layout_gravity="center"
+        android:animateLayoutChanges="true"
+        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.5">
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="350dp"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:cardBackgroundColor="@color/card_login"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="0dp">
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/login_title"
+            android:textIsSelectable="false"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
-            <FrameLayout
-                android:id="@+id/login_container"
+        <LinearLayout
+            android:id="@+id/loginFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_title_margin"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/TextInputLayout.Login"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username_label"
+                    android:imeOptions="actionNext"
+                    android:inputType="text|textEmailAddress"
+                    android:textColorHint="#B0BEC5"
+                    tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/TextInputLayout.Login"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password_label"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPassword"
+                    android:textColorHint="#B0BEC5"
+                    tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="@dimen/spacingLogin"
+                android:backgroundTint="@color/blue"
+                android:text="@string/login_label"
+                android:textAllCaps="false"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                tools:ignore="TextContrastCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/TwoFactorFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_title_margin"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:theme="@style/TextInputLayout.Login"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/two_factor_token"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/two_factor_hint"
+                    android:imeOptions="actionGo"
+                    android:inputType="text|textEmailAddress"
+                    android:textColorHint="#B0BEC5"
+                    tools:ignore="TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/send_token_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:backgroundTint="@color/blue"
+                android:text="@string/send_auth_token"
+                android:textAllCaps="false"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                tools:ignore="TextContrastCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_title_margin"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:indeterminateTint="@color/dark_blue"
+                android:progressTint="@color/dark_blue" />
+
+            <TextView
+                android:id="@+id/loading_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:padding="15dp">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="5dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/app_name"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/login_title"
-                    android:textIsSelectable="false"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/loginFields"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/login_title_margin"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:theme="@style/TextInputLayout.Login"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/username_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/username_label"
-                            android:imeOptions="actionNext"
-                            android:inputType="text|textEmailAddress"
-                            android:textColorHint="#B0BEC5"
-                            tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:theme="@style/TextInputLayout.Login"
-                        app:passwordToggleEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/password_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/password_label"
-                            android:imeOptions="actionGo"
-                            android:inputType="textPassword"
-                            android:textColorHint="#B0BEC5"
-                            tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/login_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginTop="@dimen/spacingLogin"
-                        android:backgroundTint="@color/blue"
-                        android:text="@string/login_label"
-                        android:textAllCaps="false"
-                        android:textColor="#212121"
-                        android:textSize="16sp"
-                        tools:ignore="TextContrastCheck" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/TwoFactorFields"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/login_title_margin"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="300dp"
-                        android:layout_height="match_parent"
-                        android:theme="@style/TextInputLayout.Login"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/two_factor_token"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/two_factor_hint"
-                            android:imeOptions="actionGo"
-                            android:inputType="text|textEmailAddress"
-                            android:textColorHint="#B0BEC5"
-                            tools:ignore="TextContrastCheck" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/send_token_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:backgroundTint="@color/blue"
-                        android:text="@string/send_auth_token"
-                        android:textAllCaps="false"
-                        android:textColor="#212121"
-                        android:textSize="16sp"
-                        tools:ignore="TextContrastCheck" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/loading"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/login_title_margin"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="invisible">
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:indeterminateTint="@color/dark_blue"
-                        android:progressTint="@color/dark_blue" />
-
-                    <TextView
-                        android:id="@+id/loading_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacingLogin"
-                        android:text="@string/logging_in_string"
-                        android:textAlignment="center"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
-        </androidx.cardview.widget.CardView>
+                android:layout_marginTop="@dimen/spacingLogin"
+                android:text="@string/logging_in_string"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

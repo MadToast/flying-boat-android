@@ -3,8 +3,11 @@ package com.madtoast.flyingboat.ui.utilities
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Property
@@ -16,6 +19,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.content.Image
+import com.madtoast.flyingboat.ui.components.views.PostView
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -23,9 +27,14 @@ import org.threeten.bp.temporal.ChronoUnit
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
+
 fun instantToLocalDateTime(instant: Instant): LocalDateTime {
     val zone = ZoneId.systemDefault()
     return LocalDateTime.ofInstant(instant, zone)
+}
+
+fun isDirectToTV(packageManager: PackageManager): Boolean {
+    return packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 }
 
 fun parseUserReadableDatePublished(context: Context, instant: Instant): String {
@@ -74,7 +83,11 @@ fun convertToDurationText(duration: Double): String {
             "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
 }
 
-fun selectImageQuality(context: Context, thumbnail: Image?): String? {
+fun selectImageQuality(
+    context: Context,
+    thumbnail: Image?,
+    requiresHighQualityAsset: Boolean = false
+): String? {
     if (thumbnail == null) {
         return null
     }
@@ -82,7 +95,7 @@ fun selectImageQuality(context: Context, thumbnail: Image?): String? {
     var startingWidth = thumbnail.width
     var urlReturn = thumbnail.path
 
-    if (thumbnail.childImages != null && !context.resources.getBoolean(R.bool.requiresHighQualityAssets)) {
+    if (thumbnail.childImages != null && !requiresHighQualityAsset) {
         for (item in thumbnail.childImages) {
             if (item.width < startingWidth) {
                 startingWidth = item.width
@@ -346,4 +359,34 @@ fun setViewMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
 
         view.requestLayout()
     }
+}
+
+fun Rect.insets(paddingLeft: Int, paddingTop: Int, paddingRight: Int, paddingBottom: Int) {
+    // Set padding to rect
+    // Not using Insets for this since that's only supported after API 29 (What the fudge google)
+    this.set(
+        this.left + paddingLeft,
+        this.top + paddingTop,
+        this.right - paddingRight,
+        this.bottom - paddingBottom
+    )
+}
+
+fun isNightMode(configuration: Configuration): Boolean {
+    val nightModeFlags: Int = configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK
+
+    return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+}
+
+fun generateTemplatePostItemsByNumber(
+    numberOfItems: Int,
+    minified: Boolean
+): List<PostView.Companion.PostItem> {
+    val templateList = ArrayList<PostView.Companion.PostItem>(numberOfItems)
+    while (templateList.size < numberOfItems) {
+        templateList.add(PostView.Companion.PostItem(null, minified, true))
+    }
+
+    return templateList
 }

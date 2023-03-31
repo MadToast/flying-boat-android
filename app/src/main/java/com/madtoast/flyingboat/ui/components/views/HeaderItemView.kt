@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
@@ -64,9 +64,10 @@ class HeaderItemView : LinearLayout {
                 Glide
                     .with(context)
                     .load(logoSource)
+                    .skipMemoryCache(false)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .downsample(DownsampleStrategy.AT_MOST)
                     .placeholder(R.drawable.logo_creator_placeholder)
-                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(headerLogo);
             }
         }

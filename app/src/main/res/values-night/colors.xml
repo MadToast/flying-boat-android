@@ -3,11 +3,12 @@
     <color name="list_subheader_text_color">#989898</color>
     <color name="list_header_text_color">#D3D3D3</color>
     <color name="cloud_color">#E6203444</color>
-    <color name="cloud_color_1">#E1203444</color>
+    <color name="cloud_color_1">#203444</color>
     <color name="cloud_color_2">#E11C2D3A</color>
     <color name="cloud_color_3">#E1172530</color>
     <color name="cloud_color_4">#E114212B</color>
-    <color name="card_login">#B73E3E3E</color>
+    <color name="card_login">#203444</color>
+    <color name="end_card_login">#00203444</color>
     <color name="login_title">#006DC3</color>
     <color name="baloon_overlay">#6300101C</color>
     <color name="plane_blinking_green">#00ff00</color>
@@ -35,4 +36,7 @@
     <color name="balloon_colors_bottom_stripe">#610000</color>
     <color name="balloon_colors_basket_top">#352114</color>
     <color name="balloon_colors_basket_body">#4C2F1C</color>
+    <color name="creator_categories_color">#838383</color>
+    <color name="post_loading_start_color">#2C2C2C</color>
+    <color name="post_loading_end_color">#575757</color>
 </resources>

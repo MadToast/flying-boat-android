@@ -1,17 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.madtoast.flyingboat.ui.components.views.ShadowLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="250dp"
-    android:layout_height="wrap_content">
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/post_shadow"
+    android:clipToPadding="false"
+    app:sl_corner_radius="10dp"
+    app:sl_shadowed="true"
+    app:sl_shadow_radius="15dp"
+    app:sl_shadow_color="#000">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:id="@+id/card_background"
         app:cardBackgroundColor="@color/black"
-        app:cardCornerRadius="20dp">
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rootView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -27,6 +35,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/placeholder_view_vector" />
+
+            <ImageView
+                android:id="@+id/lockedContent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="40dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,16:9.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/locked_content" />
 
             <LinearLayout
                 android:id="@+id/creatorMetadata"
@@ -59,31 +81,6 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/postMetadata"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                app:layout_constraintEnd_toEndOf="@id/thumbnailImageView"
-                app:layout_constraintTop_toTopOf="@id/thumbnailImageView">
-
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/imageProgressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="@dimen/image_loading_size"
-                android:layout_height="@dimen/image_loading_size"
-                android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="@id/thumbnailImageView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -120,17 +117,34 @@
                         android:layout_height="wrap_content"
                         android:text="@string/post_title_example"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/postedWhen"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/posted_when_example"
-                        android:textColor="@color/gray_400"
-                        android:textSize="11sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/postedWhen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/posted_when_example"
+                            android:textColor="@color/gray_400"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:id="@+id/postMetadata"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="@id/thumbnailImageView"
+                            app:layout_constraintTop_toTopOf="@id/thumbnailImageView">
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -150,4 +164,4 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-</FrameLayout>
+</com.madtoast.flyingboat.ui.components.views.ShadowLayout>

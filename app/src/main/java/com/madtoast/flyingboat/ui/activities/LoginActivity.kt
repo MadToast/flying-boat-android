@@ -55,10 +55,10 @@ import kotlin.random.Random
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityLoginBinding
-    lateinit var loginViewModel: LoginViewModel
-    lateinit var networkLiveData: NetworkLiveData
-    var creatorsDisplayed: Boolean = false
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var networkLiveData: NetworkLiveData
+    private var creatorsDisplayed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -100,13 +100,6 @@ class LoginActivity : AppCompatActivity() {
         startAnimations()
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        //Stop the animations to avoid background battery usage
-        stopAnimations()
-    }
-
     override fun onLowMemory() {
         super.onLowMemory()
         Glide
@@ -135,6 +128,14 @@ class LoginActivity : AppCompatActivity() {
         (binding.skyBackground.drawable as AnimatedVectorDrawable).start()
         (binding.plane.drawable as AnimatedVectorDrawable).start()
 
+        // Setup the looping sky animation
+        with(binding.starsBackground.withAnimatorByPercentage("translationX", 0f, -0.2f)) {
+            duration = 30000
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            start()
+        }
+
         if (loginViewModel.isFirstTimeLaunch) {
             startFirstStartAnimations()
             loginViewModel.isFirstTimeLaunch = false
@@ -150,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
                 this,
                 R.anim.login_slide_up
             )
-            else -> AnimationUtils.loadAnimation(this, R.anim.login_slide_down)
+            else -> AnimationUtils.loadAnimation(this, R.anim.login_slide_left)
         }
         binding.loginCardContainer.visibility = View.INVISIBLE
 
@@ -167,9 +168,9 @@ class LoginActivity : AppCompatActivity() {
             interpolator = AccelerateDecelerateInterpolator()
             doOnAnimatorEnd {
                 doPreChecks()
-                startPlaneIdleAnimations()
                 binding.loginCardContainer.visibility = View.VISIBLE
                 binding.loginCardContainer.startAnimation(loginEnter)
+                startPlaneIdleAnimations()
             }
             start()
         }
@@ -193,7 +194,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.plane.withAnimatorBasedOnWindowPercentage(
                     "translationX",
                     windowManager.currentWindowMetrics,
-                    -0.5f,
+                    -1f,
                     0f
                 )
             ) {
@@ -207,7 +208,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.starsBackground.withAnimatorBasedOnWindowPercentage(
                     "translationY",
                     windowManager.currentWindowMetrics,
-                    -0.85f,
+                    -0.05f,
                     0f, true
                 )
             ) {
@@ -216,6 +217,7 @@ class LoginActivity : AppCompatActivity() {
                 interpolator = AccelerateDecelerateInterpolator()
                 start()
             }
+
             with(
                 binding.clouds.withAnimatorBasedOnWindowPercentage(
                     "translationY",
@@ -251,7 +253,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.plane.withAnimatorBasedOnDisplayPercentage(
                     "translationX",
                     displayMetrics,
-                    -0.5f,
+                    -1f,
                     0f
                 )
             ) {
@@ -291,12 +293,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun startPlaneIdleAnimations() {
-        val percentageEnd = when (resources.configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> 0.1f
-            else -> 0.6f
-        }
-
-        with(binding.plane.withAnimatorByPercentage("translationY", 0f, percentageEnd)) {
+        with(binding.plane.withAnimatorByPercentage("translationY", 0f, 0.1f)) {
             startDelay = 2000
             duration = 4000
             repeatCount = ValueAnimator.INFINITE
@@ -310,11 +307,6 @@ class LoginActivity : AppCompatActivity() {
             repeatMode = ValueAnimator.REVERSE
             start()
         }
-    }
-
-    private fun stopAnimations() {
-        (binding.clouds.drawable as AnimatedVectorDrawable).stop()
-        (binding.skyBackground.drawable as AnimatedVectorDrawable).stop()
     }
 
     private fun setupButtonEvents(binding: ActivityLoginBinding, loginViewModel: LoginViewModel) {
@@ -390,8 +382,9 @@ class LoginActivity : AppCompatActivity() {
         val twoFactorToken = binding.twoFactorToken
         val btnLogin = binding.loginButton
 
+        // Show creators on screen if running on a TV. It's fun!
         networkLiveData.observe(this@LoginActivity, Observer {
-            if (it && !loginViewModel.creatorsLoaded) {
+            if (it && !loginViewModel.creatorsLoaded && isDirectToTV(packageManager)) {
                 CoroutineScope(Dispatchers.IO).launch {
                     loginViewModel.getAllPlatformCreators()
                 }
@@ -457,6 +450,11 @@ class LoginActivity : AppCompatActivity() {
         binding: ActivityLoginBinding,
         creators: Array<com.madtoast.flyingboat.api.floatplane.model.creator.Creator>
     ) {
+        if (!isDirectToTV(packageManager)) {
+            // Only show creators on TV, phones and tablets have too small screens to enjoy this.
+            return
+        }
+
         binding.creatorHolder.removeAllViews()
         creatorsDisplayed = true
 

@@ -1,20 +1,20 @@
 package com.madtoast.flyingboat.ui.components.views
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.updatePaddingRelative
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -22,18 +22,14 @@ import com.madtoast.flyingboat.R
 import com.madtoast.flyingboat.api.floatplane.model.creator.Creator
 import com.madtoast.flyingboat.ui.components.adapters.BaseAdapterHolder
 import com.madtoast.flyingboat.ui.components.adapters.BaseItem
-import com.madtoast.flyingboat.ui.components.adapters.BaseViewAdapter
 import com.madtoast.flyingboat.ui.utilities.selectImageQuality
 
 class CreatorItemView : FrameLayout {
 
-    lateinit var errorTextView: TextView
-    lateinit var progressBar: ProgressBar
-    lateinit var creatorCoverView: ImageView
-    lateinit var creatorLogoView: ImageView
-    lateinit var creatorTitle: TextView
-    lateinit var creatorCategory: TextView
-    lateinit var creatorDescription: TextView
+    private lateinit var rootView: CardView
+    private lateinit var creatorLogoView: ImageView
+    private lateinit var creatorTitle: TextView
+    private lateinit var creatorDescription: TextView
 
     constructor(context: Context) : super(context) {
         init()
@@ -54,49 +50,19 @@ class CreatorItemView : FrameLayout {
     private fun init() {
         val view = inflate(context, VIEW_TYPE, this);
 
-        errorTextView = view.findViewById(R.id.imageError)
-        creatorCoverView = view.findViewById(R.id.creatorCoverView)
-        creatorCategory = view.findViewById(R.id.creatorCategory)
-        progressBar = view.findViewById(R.id.progressBar)
+        rootView = view.findViewById(R.id.rootView)
         creatorLogoView = view.findViewById(R.id.creatorLogo)
         creatorTitle = view.findViewById(R.id.creatorTitle)
         creatorDescription = view.findViewById(R.id.creatorDescription)
-    }
-
-    private fun resetUiState() {
-        errorTextView.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
-
-    }
-
-    private fun stopCoverLoading() {
-        progressBar.visibility = View.GONE
-    }
-
-    private fun setCoverFailed() {
-        progressBar.visibility = View.GONE
-        errorTextView.visibility = View.VISIBLE
-    }
-
-    private fun setCoverDefault() {
-        creatorCoverView.setImageResource(R.drawable.placeholder_view_vector)
     }
 
     private fun setLogoDefault() {
         creatorLogoView.setImageResource(R.drawable.logo_creator_placeholder)
     }
 
-    private fun clearAnyGlideRequest() {
-        Glide.with(context).clear(creatorCoverView)
-        Glide.with(context).clear(creatorLogoView)
-    }
-
     fun setDataToView(data: CreatorItem) {
-        // Set view default state
-        resetUiState()
-
-        // Clear any glide request (in case user is fast scrolling)
-        clearAnyGlideRequest()
+        // Set the background color
+        rootView.setCardBackgroundColor(data.ProcessedImageColor)
 
         // Set a reference to the post data
         data.Creator?.apply {
@@ -106,19 +72,12 @@ class CreatorItemView : FrameLayout {
             creatorTitle.text = title
             creatorDescription.text = description
 
-            if (category != null) {
-                creatorCategory.visibility = VISIBLE
-                creatorCategory.text = category.title
-            } else {
-                creatorCategory.visibility = INVISIBLE
-            }
-
-            // Setup glide to load the thumbnail
+            // Setup glide to load the creator logo
             Glide
                 .with(context)
-                .load(thumbnailToLoad)
-                .downsample(DownsampleStrategy.AT_MOST)
-                .placeholder(R.drawable.placeholder_view_vector)
+                .load(creatorLogoToLoad)
+                .centerCrop()
+                .placeholder(R.drawable.logo_creator_placeholder)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -127,11 +86,6 @@ class CreatorItemView : FrameLayout {
                         p2: Target<Drawable>?,
                         p3: Boolean
                     ): Boolean {
-                        Log.e(BaseViewAdapter.TAG, "Cover failed to load")
-                        if (p1 != null)
-                            setCoverFailed()
-                        else
-                            stopCoverLoading()
                         return false
                     }
 
@@ -142,20 +96,21 @@ class CreatorItemView : FrameLayout {
                         p3: DataSource?,
                         p4: Boolean
                     ): Boolean {
-                        Log.d(BaseViewAdapter.TAG, "Cover Loaded Successfully")
-                        progressBar.visibility = View.INVISIBLE
+                        if (p0 is BitmapDrawable) {
+                            val bitmapDrawable = p0 as BitmapDrawable
+                            if (bitmapDrawable.bitmap != null) {
+                                Palette.from(bitmapDrawable.bitmap).generate { palette ->
+                                    if (palette != null) {
+                                        var color = palette!!.getDarkVibrantColor(Color.BLACK)
+                                        rootView.setCardBackgroundColor(color)
+                                        data.ProcessedImageColor = color
+                                    }
+                                }
+                            }
+                        }
                         return false
                     }
                 })
-                .into(creatorCoverView);
-
-            // Setup glide to load the creator logo
-            Glide
-                .with(context)
-                .load(creatorLogoToLoad)
-                .centerCrop()
-                .placeholder(R.drawable.logo_creator_placeholder)
-                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(creatorLogoView);
         }
     }
@@ -199,7 +154,8 @@ class CreatorItemView : FrameLayout {
         }
 
         class CreatorItem(
-            val Creator: Creator?
+            val Creator: Creator?,
+            var ProcessedImageColor: Int = Color.BLACK
         ) : BaseItem() {
             override fun getItemType(): Int {
                 return VIEW_TYPE

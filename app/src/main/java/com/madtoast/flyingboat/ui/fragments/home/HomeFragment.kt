@@ -1,6 +1,5 @@
 package com.madtoast.flyingboat.ui.fragments.home
 
-import android.graphics.Typeface
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.view.updatePaddingRelative
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,6 +29,7 @@ import com.madtoast.flyingboat.ui.components.views.PostView
 import com.madtoast.flyingboat.ui.components.views.TextItemView
 import com.madtoast.flyingboat.ui.fragments.home.viewmodels.HomeViewModel
 import com.madtoast.flyingboat.ui.fragments.home.viewmodels.HomeViewModelFactory
+import com.madtoast.flyingboat.ui.utilities.generateTemplatePostItemsByNumber
 import com.madtoast.flyingboat.ui.utilities.selectImageQuality
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +45,7 @@ class HomeFragment : Fragment() {
     private var _bottomPadding = 0
     private var _startPadding = 0
     private var _viewInsetsApplied = false
+    private var _nestedRecyclerStartPadding = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,6 +104,9 @@ class HomeFragment : Fragment() {
             v.onApplyWindowInsets(insets)
         }
 
+        _nestedRecyclerStartPadding =
+            resources.getDimensionPixelSize(R.dimen.nested_list_padding_start)
+
         setupRecyclerView()
         setupObservers()
         loadRequiredData()
@@ -135,28 +140,8 @@ class HomeFragment : Fragment() {
         val homeItemsList = ArrayList<BaseItem>()
         val homeAdapter = homeList.adapter as BaseViewAdapter
 
-        val headerItem = TextItemView.Companion.TextItem(
-            getString(R.string.welcome),
-            resources.getDimension(R.dimen.welcome_text),
-            Typeface.BOLD
-        )
-        headerItem.setItemPadding(_startPadding, 0, 0, 0)
-        homeItemsList.add(
-            headerItem
-        )
-
-        var hasAddedSubHeaderForSubscribed = false
         var hasAddedSubHeaderForUnsubscribed = false
         for (creator in creators) {
-            if (creator.userSubscribed && !hasAddedSubHeaderForSubscribed) {
-                val header = TextItemView.Companion.TextItem(
-                    getString(R.string.content_for_today),
-                    resources.getDimension(R.dimen.subheader_text)
-                )
-                header.setItemPadding(_startPadding, 0, 0, 0)
-                homeItemsList.add(header)
-                hasAddedSubHeaderForSubscribed = true
-            }
             if (!creator.userSubscribed && !hasAddedSubHeaderForUnsubscribed) {
                 val header = TextItemView.Companion.TextItem(
                     getString(R.string.discover_content_today),
@@ -166,6 +151,7 @@ class HomeFragment : Fragment() {
                 homeItemsList.add(header)
                 hasAddedSubHeaderForUnsubscribed = true
             }
+
             //Generate Header
             val header = generateHeaderForCreator(creator)
             header.setItemPadding(_startPadding, 0, 0, 0)
@@ -173,7 +159,7 @@ class HomeFragment : Fragment() {
 
             //Generate Nested List
             val list = generateNestedRecyclerForCreator(creator)
-            list.setItemPadding(_startPadding, 0, 0, 0)
+            list.setItemPadding(_startPadding + _nestedRecyclerStartPadding, 0, 0, 0)
             homeItemsList.add(list)
         }
         homeAdapter.updateDataSet(homeItemsList)
@@ -183,12 +169,18 @@ class HomeFragment : Fragment() {
         homeList.setHasFixedSize(true)
 
         //Tell the recycler to keep more views in cache
-        homeList.setItemViewCacheSize(20)
+        homeList.setItemViewCacheSize(40)
     }
 
     private fun generateNestedRecyclerForCreator(creator: Creator): NestedRecyclerView.Companion.NestedRecyclerItem {
         //Create the supporting objects for the recycler view
         val creatorAdapterItems = ArrayList<BaseItem>()
+        creatorAdapterItems.addAll(
+            generateTemplatePostItemsByNumber(
+                resources.getInteger(R.integer.template_items),
+                true
+            )
+        )
         val creatorLayoutManagerOrientation = LinearLayoutManager.HORIZONTAL
 
         //Create the nested list item
@@ -201,7 +193,7 @@ class HomeFragment : Fragment() {
 
         //Set Adapter attached listener so we load data only when it's showing on screen
         creatorNestedList.setOnAdapterAttachedListener { itAdapter ->
-            if (itAdapter.isEmpty() && !itAdapter.isLoading()) {
+            if ((itAdapter.isEmpty() || (itAdapter.getItemAt(0) as PostView.Companion.PostItem).Template) && !itAdapter.isLoading()) {
                 //Set the adapter to loading to prevent double requests for content
                 itAdapter.setLoading(true)
 
@@ -286,6 +278,9 @@ class HomeFragment : Fragment() {
             val adapterDataSet = ArrayList<BaseItem>()
 
             for (item in content) {
+                // Set the user Subscribed status
+                item.creator?.userSubscribed = creator.userSubscribed
+
                 adapterDataSet.add(PostView.Companion.PostItem(item, minifyPosts))
             }
 
@@ -306,11 +301,7 @@ class HomeFragment : Fragment() {
     private fun updateBottomPadding() {
         // Set the margin of the last item as the padding on the recyclerview won't work correctly.
         val homeList: RecyclerView = _binding.homeList
-        val homeAdapter = homeList.adapter as BaseViewAdapter?
-        if (homeAdapter != null && homeAdapter.itemCount > 0) {
-            homeAdapter.getItemAt(homeAdapter.itemCount - 1).bottomMargins = _bottomPadding
-            homeAdapter.notifyItemChanged(homeAdapter.itemCount - 1)
-        }
+        homeList.updatePadding(bottom = _bottomPadding)
     }
 
     private fun updateStartPadding() {

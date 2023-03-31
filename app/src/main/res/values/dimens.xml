@@ -13,7 +13,7 @@
     <dimen name="creator_logo_dimen">80dp</dimen>
     <dimen name="creator_logo_padding_bottom">15dp</dimen>
     <dimen name="image_loading_size">60dp</dimen>
-    <dimen name="metadata_icon_size">20dp</dimen>
+    <dimen name="metadata_icon_size">16dp</dimen>
     <dimen name="metadata_text_size">11sp</dimen>
     <dimen name="welcome_text">26sp</dimen>
     <dimen name="subheader_text">18sp</dimen>
@@ -26,5 +26,6 @@
     <dimen name="fragment_padding_bottom_additional">15dp</dimen>
     <dimen name="fragment_padding_start">0dp</dimen>
     <dimen name="fragment_padding_start_additional">0dp</dimen>
-    <dimen name="post_item_minified">250dp</dimen>
+    <dimen name="nested_list_padding_start">10dp</dimen>
+    <dimen name="post_item_minified">280dp</dimen>
 </resources>

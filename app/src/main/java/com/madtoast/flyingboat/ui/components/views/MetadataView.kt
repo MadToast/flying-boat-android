@@ -8,11 +8,8 @@ import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.updatePaddingRelative
 import com.madtoast.flyingboat.R
-import com.madtoast.flyingboat.ui.utilities.setViewMargins
 
 class MetadataView : LinearLayout {
     private val metadataIcon: ImageView = ImageView(context)
@@ -59,14 +56,6 @@ class MetadataView : LinearLayout {
             LayoutParams.WRAP_CONTENT, // Height
         )
 
-        setViewMargins(
-            this,
-            resources.getDimensionPixelSize(R.dimen.metadata_padding_sides),
-            0,
-            0,
-            0
-        )
-
         updatePaddingRelative(
             resources.getDimensionPixelSize(R.dimen.metadata_padding_sides),
             0,
@@ -76,7 +65,6 @@ class MetadataView : LinearLayout {
 
         gravity = Gravity.CENTER
         orientation = HORIZONTAL
-        ViewCompat.setBackground(this, ContextCompat.getDrawable(context, R.drawable.pill_bg))
     }
 
     fun setMetadataType(type: MetadataType) {
@@ -84,8 +72,10 @@ class MetadataView : LinearLayout {
             when (type) {
                 MetadataType.AUDIO -> R.drawable.audio_icon
                 MetadataType.GALLERY -> R.drawable.gallery_icon
+                MetadataType.VIDEO_GALLERY -> R.drawable.video_library_icon
                 MetadataType.PICTURE -> R.drawable.picture_icon
                 MetadataType.VIDEO -> R.drawable.video_icon
+                MetadataType.TEXT_ONLY -> R.drawable.text_icon
             }
         )
     }
@@ -99,7 +89,9 @@ class MetadataView : LinearLayout {
             PICTURE,
             VIDEO,
             AUDIO,
-            GALLERY
+            GALLERY,
+            VIDEO_GALLERY,
+            TEXT_ONLY
         }
     }
 }

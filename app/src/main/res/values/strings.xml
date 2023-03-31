@@ -13,8 +13,8 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="content_for_today">Here\'s your subscribed content from your trusty creators!</string>
-    <string name="discover_content_today">Why not try something new? It\'s always great to discover new content and learn more!</string>
+    <string name="content_for_today">Here\'s the latest from your creators!</string>
+    <string name="discover_content_today">Why not try something new today?</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be more than 5 characters</string>
     <string name="invalid_token">Token must be more than 5 characters</string>
@@ -25,7 +25,7 @@
     <string name="send_auth_token">Send Code</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="loading_string">Loading</string>
-    <string name="initial_app_loading">Entering airport…</string>
+    <string name="initial_app_loading">Checking flight…</string>
     <string name="logging_in_string">Checking Pilot Credentials…</string>
     <string name="two_factor_logging_in_string">Polishing Credentials and taking a closer look…</string>
     <string name="logout_label">Logout</string>

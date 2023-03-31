@@ -34,11 +34,11 @@ class FloatplaneClient private constructor(private val appPrefs: SharedPreferenc
     }
 
     fun findAndSetAuthenticationHeader(headers: Headers) {
-        for (header in headers.names()) {
-            if (header.equals("set-cookie", true)) {
-                val cookieHeader = headers[header]?.split(";")?.get(0)
-                if (cookieHeader != null && cookieHeader.startsWith(AUTH_HEADER, true)) {
-                    setAuthenticationHeader(cookieHeader)
+        for (value in headers.values("set-cookie")) {
+            if (value?.startsWith(AUTH_HEADER) == true) {
+                val cookieValue = value?.split(";")?.get(0)
+                if (cookieValue != null && cookieValue.startsWith(AUTH_HEADER, true)) {
+                    setAuthenticationHeader(cookieValue)
                 }
                 break
             }

@@ -1,6 +1,5 @@
 package com.madtoast.flyingboat.ui.activities
 
-import android.content.Context
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.view.Display
@@ -28,25 +27,6 @@ class MainActivity2 : AppCompatActivity() {
 
         binding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //TODO: Implement External Display support
-        displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        presentationDisplays =
-            displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
-        displayManager.registerDisplayListener(object : DisplayManager.DisplayListener {
-            override fun onDisplayAdded(displayId: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDisplayRemoved(displayId: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDisplayChanged(displayId: Int) {
-                TODO("Not yet implemented")
-            }
-
-        }, null)
 
         val navView: BottomNavigationView? = binding.navView
         val tabletNavView: NavigationRailView? = binding.tabletNavView
