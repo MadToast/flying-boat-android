@@ -8,7 +8,6 @@ import com.madtoast.flyingboat.ui.components.views.*
 class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onAdapterAttached: ((adapter: BaseViewAdapter) -> Unit)? = null
     private var loading: Boolean = false
     private var infiniteScrollable: Boolean = false
 
@@ -95,24 +94,12 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
         return dataSet.isEmpty()
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-
-        onAdapterAttached?.let {
-            it(this)
-        }
-    }
-
     fun getItemSet(): ArrayList<BaseItem> {
         return dataSet
     }
 
     fun getItemAt(index: Int): BaseItem {
         return this.dataSet[index]
-    }
-
-    fun isInfiniteScrollable(): Boolean {
-        return infiniteScrollable
     }
 
     fun setInfiniteScrollable(infiniteScrollable: Boolean, notify: Boolean = true) {
@@ -141,10 +128,6 @@ class BaseViewAdapter(private var dataSet: ArrayList<BaseItem>) :
     @Synchronized
     fun setLoading(status: Boolean) {
         this.loading = status
-    }
-
-    fun setAdapterAttachedListener(listener: ((adapter: BaseViewAdapter) -> Unit)?) {
-        onAdapterAttached = listener
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -2,6 +2,7 @@ package com.madtoast.flyingboat.ui.components.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.widget.FrameLayout
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,9 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 class NestedRecyclerView : FrameLayout {
 
     private lateinit var nestedRecycler: RecyclerView
+    private lateinit var currentData: NestedRecyclerItem
+    private var isUpdating: Boolean = false
+    private var initialOffset: Int = Int.MIN_VALUE
 
     constructor(context: Context) : super(context) {
         init()
@@ -43,51 +47,80 @@ class NestedRecyclerView : FrameLayout {
         nestedRecycler.adapter = BaseViewAdapter(ArrayList())
         nestedRecycler.itemAnimator = SlideInUpAnimator()
         nestedRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        nestedRecycler.setItemViewCacheSize(20)
+        nestedRecycler.setItemViewCacheSize(8)
         nestedRecycler.clipToPadding = false
+        nestedRecycler.onScrolledListener { it, _, _ ->
+            this.onRecyclerScroll(it)
+        }
     }
 
     fun setDataToView(data: NestedRecyclerItem) {
-        //Clear any previous scroll listener
-        nestedRecycler.clearOnScrollListeners()
+        if (this::nestedRecycler.isInitialized) {
+            // Inform recycler we're updating
+            isUpdating = true
 
-        (nestedRecycler.adapter as BaseViewAdapter).setLoadingIconLayoutParams(
-            data.LayoutManagerOrientation != LinearLayoutManager.HORIZONTAL,
-            data.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL
-        )
+            // Set the current data
+            currentData = data
 
-        (nestedRecycler.adapter as BaseViewAdapter).setLoading(false)
-        (nestedRecycler.adapter as BaseViewAdapter).setInfiniteScrollable(
-            data.InfiniteScrollable,
-            false
-        )
-        (nestedRecycler.adapter as BaseViewAdapter).updateDataSet(data.AdapterItems)
-        (nestedRecycler.layoutManager as LinearLayoutManager).orientation =
-            data.LayoutManagerOrientation
-        data.ScrollListener?.apply {
-            nestedRecycler.onScrolledListener { it, _, _ ->
-                this.invoke(it.layoutManager!!, it.adapter!!)
+            // Set infinite scroll loading false
+            (nestedRecycler.adapter as BaseViewAdapter).setLoading(false)
+
+            (nestedRecycler.adapter as BaseViewAdapter).setLoadingIconLayoutParams(
+                data.LayoutManagerOrientation != LinearLayoutManager.HORIZONTAL,
+                data.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL
+            )
+            (nestedRecycler.adapter as BaseViewAdapter).setInfiniteScrollable(
+                data.InfiniteScrollable,
+                false
+            )
+            (nestedRecycler.adapter as BaseViewAdapter).updateDataSet(data.AdapterItems)
+            (nestedRecycler.layoutManager as LinearLayoutManager).orientation =
+                data.LayoutManagerOrientation
+            data.AdapterAttachedListener?.apply {
+                this((nestedRecycler.adapter as BaseViewAdapter))
             }
-        }
-        data.AdapterAttachedListener?.apply {
-            this((nestedRecycler.adapter as BaseViewAdapter))
-        }
-        (nestedRecycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-            data.currentVisiblePosition,
-            data.currentVisibleOffset
-        )
-        nestedRecycler.onScrolledListener { it, _, _ ->
-            data.currentVisiblePosition =
-                (it.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-            val childView =
-                (it.layoutManager as LinearLayoutManager).findViewByPosition(data.currentVisiblePosition)
-            val childViewStart =
-                if (data.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL) childView!!.left else childView!!.top
-            val recyclerViewStart =
-                if (data.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL) it.left else it.top
+            (nestedRecycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+                data.currentVisiblePosition,
+                data.currentVisibleOffset
+            )
+            Log.d(
+                "NESTED_RECYCLER",
+                String.format(
+                    "Current visible position: %s offset: %s",
+                    data.currentVisiblePosition,
+                    data.currentVisibleOffset
+                )
+            )
 
-            data.currentVisibleOffset = childViewStart - recyclerViewStart
+            // Inform recycler we've finished updating
+            isUpdating = false
         }
+    }
+
+    private fun onRecyclerScroll(it: RecyclerView) {
+        if (isUpdating)
+            return
+
+        currentData.currentVisiblePosition =
+            (it.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        val childView =
+            (it.layoutManager as LinearLayoutManager).findViewByPosition(currentData.currentVisiblePosition)
+        val childViewStart =
+            if (currentData.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL) childView!!.left else childView!!.top
+        val recyclerViewStart =
+            if (currentData.LayoutManagerOrientation == LinearLayoutManager.HORIZONTAL) it.left else it.top
+
+        currentData.currentVisibleOffset = childViewStart - recyclerViewStart
+
+        if (initialOffset == Int.MIN_VALUE && currentData.currentVisibleOffset > 0) {
+            initialOffset = currentData.currentVisibleOffset
+        } else {
+            // We want to remove the offset from the equation since this initial offset is most likely padding added to recycler view.
+            currentData.currentVisibleOffset -= initialOffset
+        }
+
+        // Invoke scroll listener if set
+        currentData.ScrollListener?.invoke(it.layoutManager!!, it.adapter!!)
     }
 
     companion object {
